@@ -1,4 +1,4 @@
-import { Application, Request, Response, NextFunction, json } from "express";
+import { Application, json } from "express";
 import routes from "../routes/index";
 
 import cors from "cors";
