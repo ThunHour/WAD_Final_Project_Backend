@@ -73,8 +73,8 @@ model Cpu {
   price       Float
   type        String
   motherBoard MotherBoardCpu[]
-  customize   Customize        @relation(fields: [customizeId], references: [id])
-  customizeId String           @unique
+  customize   Customize?        @relation(fields: [customizeId], references: [id])
+  customizeId String?           @unique
 }
 
 model MotherBoardCpu {

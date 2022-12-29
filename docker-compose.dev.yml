@@ -1,0 +1,19 @@
+version: "3.1"
+
+services:
+  prisma-studio:
+    container_name: prisma-wadfinal
+    image: timothyjmiller/prisma-studio:latest
+    restart: unless-stopped
+    env_file:
+      - .env
+    ports:
+      - 5555:5555
+  db:
+    image: postgres:14.3-alpine
+    container_name: postgres-wadfinal
+    environment:
+      POSTGRES_USER: wadfinal
+      POSTGRES_PASSWORD: 123
+    ports:
+      - "5432:5432"
