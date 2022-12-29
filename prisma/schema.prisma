@@ -1,0 +1,220 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String          @id @default(uuid())
+  email     String          @unique
+  name      String          @unique
+  password  String
+  role      Role            @default(USER)
+  //collection of customize product
+  customize CustomizeUser[]
+}
+
+model Brand {
+  id        String     @id @default(uuid())
+  brandName String     @unique
+  category  Category[]
+  Image     Image?
+}
+
+model Category {
+  id           String        @id @default(uuid())
+  categoryName String        @unique
+  brand        Brand         @relation(fields: [brandId], references: [id])
+  brandId      String        @unique
+  Image        Image?
+  gpu          Gpu[]
+  PowerSupply  PowerSupply[]
+  Cpu          Cpu[]
+  Ram          Ram[]
+  Storage      Storage[]
+  Case         Case[]
+  MotherBoard  MotherBoard[]
+}
+
+model Gpu {
+  id          String    @id @default(uuid())
+  category    Category  @relation(fields: [categoryId], references: [id])
+  categoryId  String
+  model       String
+  spec        String
+  price       Float
+  customize   Customize @relation(fields: [customizeId], references: [id])
+  customizeId String    @unique
+}
+
+model PowerSupply {
+  id          String    @id @default(uuid())
+  category    Category  @relation(fields: [categoryId], references: [id])
+  categoryId  String
+  model       String
+  spec        String
+  price       Float
+  customize   Customize @relation(fields: [customizeId], references: [id])
+  customizeId String    @unique
+}
+
+model Cpu {
+  id          String           @id @default(uuid())
+  category    Category         @relation(fields: [categoryId], references: [id])
+  categoryId  String
+  model       String
+  spec        String
+  price       Float
+  type        String
+  motherBoard MotherBoardCpu[]
+  customize   Customize        @relation(fields: [customizeId], references: [id])
+  customizeId String           @unique
+}
+
+model MotherBoardCpu {
+  cpu           Cpu         @relation(fields: [cpuId], references: [id])
+  cpuId         String
+  motherBoard   MotherBoard @relation(fields: [motherBoardId], references: [id])
+  motherBoardId String
+
+  @@id([cpuId, motherBoardId])
+}
+
+model Ram {
+  id          String           @id @default(uuid())
+  category    Category         @relation(fields: [categoryId], references: [id])
+  categoryId  String
+  model       String
+  spec        String
+  price       Float
+  type        String
+  motherBoard MotherBoardRam[]
+  customize   Customize        @relation(fields: [customizeId], references: [id])
+  customizeId String           @unique
+}
+
+model MotherBoardRam {
+  motherBoard   MotherBoard @relation(fields: [motherBoardId], references: [id])
+  motherBoardId String
+  Ram           Ram         @relation(fields: [ramId], references: [id])
+  ramId         String
+
+  @@id([motherBoardId, ramId])
+}
+
+model Storage {
+  id          String               @id @default(uuid())
+  category    Category             @relation(fields: [categoryId], references: [id])
+  categoryId  String
+  model       String
+  spec        String
+  price       Float
+  motherBoard MotherBoardStorage[]
+  customize   Customize            @relation(fields: [customizeId], references: [id])
+  customizeId String               @unique
+}
+
+model MotherBoardStorage {
+  Storage       Storage     @relation(fields: [storageId], references: [id])
+  storageId     String
+  MotherBoard   MotherBoard @relation(fields: [motherBoardId], references: [id])
+  motherBoardId String
+
+  @@id([storageId, motherBoardId])
+}
+
+model Case {
+  id          String            @id @default(uuid())
+  category    Category          @relation(fields: [categoryId], references: [id])
+  categoryId  String
+  model       String
+  spec        String
+  price       Float
+  motherBoard MotherBoardCase[]
+  customize   Customize         @relation(fields: [customizeId], references: [id])
+  customizeId String            @unique
+}
+
+model MotherBoardCase {
+  Case          Case        @relation(fields: [caseId], references: [id])
+  caseId        String
+  MotherBoard   MotherBoard @relation(fields: [motherBoardId], references: [id])
+  motherBoardId String
+
+  @@id([caseId, motherBoardId])
+}
+
+model MotherBoard {
+  id             String               @id @default(uuid())
+  category       Category             @relation(fields: [categoryId], references: [id])
+  categoryId     String
+  model          String
+  spec           String
+  price          Float
+  cpu            MotherBoardCpu[]
+  MotherBoardRam MotherBoardRam[]
+  storage        MotherBoardStorage[]
+  case           MotherBoardCase[]
+  customize      Customize            @relation(fields: [customizeId], references: [id])
+  customizeId    String               @unique
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+model Color {
+  id    String       @id @default(uuid())
+  color String
+  image ColorImage[]
+}
+
+model Image {
+  id          String       @id @default(uuid())
+  imageUrl    String
+  color       ColorImage[]
+  brand       Brand        @relation(fields: [brandId], references: [id])
+  brandId     String       @unique
+  category    Category     @relation(fields: [categooryId], references: [id])
+  categooryId String       @unique
+}
+
+model ColorImage {
+  color   Color  @relation(fields: [colorId], references: [id])
+  colorId String @unique
+  image   Image  @relation(fields: [imageId], references: [id])
+  imageId String @unique
+
+  @@id([colorId, imageId])
+}
+
+model Customize {
+  id            String          @id @default(uuid())
+  gpu           Gpu?
+  powerSupply   PowerSupply?
+  cpu           Cpu?
+  ram           Ram?
+  storage       Storage?
+  case          Case?
+  motherBoard   MotherBoard?
+  motherBoardId String?
+  user          CustomizeUser[]
+  share         Boolean
+}
+
+model CustomizeUser {
+  Customize   Customize @relation(fields: [customizeId], references: [id])
+  customizeId String
+
+  User   User   @relation(fields: [userId], references: [id])
+  userId String
+
+  @@id([customizeId, userId])
+}
