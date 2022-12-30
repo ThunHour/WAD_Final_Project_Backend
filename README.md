@@ -1,4 +1,4 @@
-# REAN - Private Tutoring Backend
+# REAN - Wad Final project
 
 To establish a knowledge-sharing website for Cambodian students, high-school students and to connect students with good quality tutor for a private tutoring section.
 
@@ -10,7 +10,7 @@ Create .env file and copy this in
 PORT=3000
 ACCESS_TOKEN_SECRET='twcibNhzcHgrqWaGsBY5eA=='
 REFRESH_TOKEN_SECRET='aklsdjalskdjlahjwediouwhaodijasd=='
-DATABASE_URL="postgresql://wadfinal:123@localhost:5432/wadfinal?schema=public&sslmode=prefer"
+DATABASE_URL="postgresql://wadfinal:123@localhost:5433/wadfinal?schema=public&sslmode=prefer"
 
 ```
 

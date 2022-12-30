@@ -16,4 +16,4 @@ services:
       POSTGRES_USER: wadfinal
       POSTGRES_PASSWORD: 123
     ports:
-      - "5432:5432"
+      - "5433:5433"
