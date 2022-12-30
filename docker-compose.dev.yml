@@ -15,5 +15,10 @@ services:
     environment:
       POSTGRES_USER: wadfinal
       POSTGRES_PASSWORD: 123
+      POSTGRES_DB: wadfinal
+    expose:
+      - "5433"
     ports:
       - "5433:5433"
+
+    command: -p 5433
