@@ -1,6 +1,6 @@
-# REAN - Wad Final project
+# SSH- Wad Final project
 
-To establish a knowledge-sharing website for Cambodian students, high-school students and to connect students with good quality tutor for a private tutoring section.
+
 
 ## Getting started - Development
 
