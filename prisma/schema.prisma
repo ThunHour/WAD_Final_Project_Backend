@@ -43,25 +43,27 @@ model Category {
 }
 
 model Gpu {
-  id          String    @id @default(uuid())
-  category    Category  @relation(fields: [categoryId], references: [id])
+  id          String       @id @default(uuid())
+  category    Category     @relation(fields: [categoryId], references: [id])
   categoryId  String
   model       String
   spec        String
   price       Float
-  customize   Customize @relation(fields: [customizeId], references: [id])
-  customizeId String    @unique
+  colorImage  ColorImage[]
+  customize   Customize[]
+  customizeId String       @unique
 }
 
 model PowerSupply {
-  id          String    @id @default(uuid())
-  category    Category  @relation(fields: [categoryId], references: [id])
+  id          String       @id @default(uuid())
+  category    Category     @relation(fields: [categoryId], references: [id])
   categoryId  String
   model       String
   spec        String
   price       Float
-  customize   Customize @relation(fields: [customizeId], references: [id])
-  customizeId String    @unique
+  colorImage  ColorImage[]
+  customize   Customize[]
+  customizeId String       @unique
 }
 
 model Cpu {
@@ -72,9 +74,10 @@ model Cpu {
   spec        String
   price       Float
   type        String
+  colorImage  ColorImage[]
   motherBoard MotherBoardCpu[]
-  customize   Customize?        @relation(fields: [customizeId], references: [id])
-  customizeId String?           @unique
+  customize   Customize[]
+  customizeId String?          @unique
 }
 
 model MotherBoardCpu {
@@ -93,9 +96,10 @@ model Ram {
   model       String
   spec        String
   price       Float
+  colorImage  ColorImage[]
   type        String
   motherBoard MotherBoardRam[]
-  customize   Customize        @relation(fields: [customizeId], references: [id])
+  customize   Customize[]
   customizeId String           @unique
 }
 
@@ -113,10 +117,11 @@ model Storage {
   category    Category             @relation(fields: [categoryId], references: [id])
   categoryId  String
   model       String
+  colorImage  ColorImage[]
   spec        String
   price       Float
   motherBoard MotherBoardStorage[]
-  customize   Customize            @relation(fields: [customizeId], references: [id])
+  customize   Customize[]
   customizeId String               @unique
 }
 
@@ -134,10 +139,11 @@ model Case {
   category    Category          @relation(fields: [categoryId], references: [id])
   categoryId  String
   model       String
+  colorImage  ColorImage[]
   spec        String
   price       Float
   motherBoard MotherBoardCase[]
-  customize   Customize         @relation(fields: [customizeId], references: [id])
+  customize   Customize[]
   customizeId String            @unique
 }
 
@@ -157,11 +163,12 @@ model MotherBoard {
   model          String
   spec           String
   price          Float
+  colorImage     ColorImage[]
   cpu            MotherBoardCpu[]
   MotherBoardRam MotherBoardRam[]
   storage        MotherBoardStorage[]
   case           MotherBoardCase[]
-  customize      Customize            @relation(fields: [customizeId], references: [id])
+  customize      Customize[]
   customizeId    String               @unique
 }
 
@@ -187,30 +194,50 @@ model Image {
 }
 
 model ColorImage {
+  id      String @id @default(uuid())
   color   Color  @relation(fields: [colorId], references: [id])
   colorId String @unique
   image   Image  @relation(fields: [imageId], references: [id])
   imageId String @unique
 
-  @@id([colorId, imageId])
+  Gpu           Gpu?         @relation(fields: [gpuId], references: [id])
+  gpuId         String?
+  PowerSupply   PowerSupply? @relation(fields: [powerSupplyId], references: [id])
+  powerSupplyId String?
+  Cpu           Cpu?         @relation(fields: [cpuId], references: [id])
+  cpuId         String?
+  Ram           Ram?         @relation(fields: [ramId], references: [id])
+  ramId         String?
+  Storage       Storage?     @relation(fields: [storageId], references: [id])
+  storageId     String?
+  Case          Case?        @relation(fields: [caseId], references: [id])
+  caseId        String?
+  MotherBoard   MotherBoard? @relation(fields: [motherBoardId], references: [id])
+  motherBoardId String?
 }
 
 model Customize {
   id            String          @id @default(uuid())
-  gpu           Gpu?
-  powerSupply   PowerSupply?
-  cpu           Cpu?
-  ram           Ram?
-  storage       Storage?
-  case          Case?
-  motherBoard   MotherBoard?
+  gpu           Gpu?            @relation(fields: [gpuId], references: [id])
+  powerSupply   PowerSupply?    @relation(fields: [powerSupplyId], references: [id])
+  cpu           Cpu?            @relation(fields: [cpuId], references: [id])
+  ram           Ram?            @relation(fields: [ramId], references: [id])
+  storage       Storage?        @relation(fields: [storageId], references: [id])
+  case          Case?           @relation(fields: [caseId], references: [id])
+  motherBoard   MotherBoard?    @relation(fields: [motherBoardId], references: [id])
   motherBoardId String?
   user          CustomizeUser[]
   share         Boolean
+  gpuId         String?
+  powerSupplyId String?
+  cpuId         String?
+  ramId         String?
+  storageId     String?
+  caseId        String?
 }
 
 model CustomizeUser {
-  Customize   Customize @relation(fields: [customizeId], references: [id])
+  customize   Customize @relation(fields: [customizeId], references: [id])
   customizeId String
 
   User   User   @relation(fields: [userId], references: [id])
