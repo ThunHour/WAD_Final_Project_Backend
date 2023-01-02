@@ -61,7 +61,7 @@ CREATE TABLE "Cpu" (
     "spec" TEXT NOT NULL,
     "price" DOUBLE PRECISION NOT NULL,
     "type" TEXT NOT NULL,
-    "customizeId" TEXT NOT NULL,
+    "customizeId" TEXT,
 
     CONSTRAINT "Cpu_pkey" PRIMARY KEY ("id")
 );
@@ -159,18 +159,26 @@ CREATE TABLE "Color" (
 CREATE TABLE "Image" (
     "id" TEXT NOT NULL,
     "imageUrl" TEXT NOT NULL,
-    "brandId" TEXT NOT NULL,
-    "categooryId" TEXT NOT NULL,
+    "brandId" TEXT,
+    "categooryId" TEXT,
 
     CONSTRAINT "Image_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
 CREATE TABLE "ColorImage" (
+    "id" TEXT NOT NULL,
     "colorId" TEXT NOT NULL,
     "imageId" TEXT NOT NULL,
+    "gpuId" TEXT,
+    "powerSupplyId" TEXT,
+    "cpuId" TEXT,
+    "ramId" TEXT,
+    "storageId" TEXT,
+    "caseId" TEXT,
+    "motherBoardId" TEXT,
 
-    CONSTRAINT "ColorImage_pkey" PRIMARY KEY ("colorId","imageId")
+    CONSTRAINT "ColorImage_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -178,6 +186,12 @@ CREATE TABLE "Customize" (
     "id" TEXT NOT NULL,
     "motherBoardId" TEXT,
     "share" BOOLEAN NOT NULL,
+    "gpuId" TEXT,
+    "powerSupplyId" TEXT,
+    "cpuId" TEXT,
+    "ramId" TEXT,
+    "storageId" TEXT,
+    "caseId" TEXT,
 
     CONSTRAINT "Customize_pkey" PRIMARY KEY ("id")
 );
@@ -201,9 +215,6 @@ CREATE UNIQUE INDEX "Brand_brandName_key" ON "Brand"("brandName");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Category_categoryName_key" ON "Category"("categoryName");
-
--- CreateIndex
-CREATE UNIQUE INDEX "Category_brandId_key" ON "Category"("brandId");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Gpu_customizeId_key" ON "Gpu"("customizeId");
@@ -245,19 +256,10 @@ ALTER TABLE "Category" ADD CONSTRAINT "Category_brandId_fkey" FOREIGN KEY ("bran
 ALTER TABLE "Gpu" ADD CONSTRAINT "Gpu_categoryId_fkey" FOREIGN KEY ("categoryId") REFERENCES "Category"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Gpu" ADD CONSTRAINT "Gpu_customizeId_fkey" FOREIGN KEY ("customizeId") REFERENCES "Customize"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
 ALTER TABLE "PowerSupply" ADD CONSTRAINT "PowerSupply_categoryId_fkey" FOREIGN KEY ("categoryId") REFERENCES "Category"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "PowerSupply" ADD CONSTRAINT "PowerSupply_customizeId_fkey" FOREIGN KEY ("customizeId") REFERENCES "Customize"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
 ALTER TABLE "Cpu" ADD CONSTRAINT "Cpu_categoryId_fkey" FOREIGN KEY ("categoryId") REFERENCES "Category"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "Cpu" ADD CONSTRAINT "Cpu_customizeId_fkey" FOREIGN KEY ("customizeId") REFERENCES "Customize"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "MotherBoardCpu" ADD CONSTRAINT "MotherBoardCpu_cpuId_fkey" FOREIGN KEY ("cpuId") REFERENCES "Cpu"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -269,9 +271,6 @@ ALTER TABLE "MotherBoardCpu" ADD CONSTRAINT "MotherBoardCpu_motherBoardId_fkey" 
 ALTER TABLE "Ram" ADD CONSTRAINT "Ram_categoryId_fkey" FOREIGN KEY ("categoryId") REFERENCES "Category"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Ram" ADD CONSTRAINT "Ram_customizeId_fkey" FOREIGN KEY ("customizeId") REFERENCES "Customize"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
 ALTER TABLE "MotherBoardRam" ADD CONSTRAINT "MotherBoardRam_motherBoardId_fkey" FOREIGN KEY ("motherBoardId") REFERENCES "MotherBoard"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
@@ -279,9 +278,6 @@ ALTER TABLE "MotherBoardRam" ADD CONSTRAINT "MotherBoardRam_ramId_fkey" FOREIGN 
 
 -- AddForeignKey
 ALTER TABLE "Storage" ADD CONSTRAINT "Storage_categoryId_fkey" FOREIGN KEY ("categoryId") REFERENCES "Category"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "Storage" ADD CONSTRAINT "Storage_customizeId_fkey" FOREIGN KEY ("customizeId") REFERENCES "Customize"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "MotherBoardStorage" ADD CONSTRAINT "MotherBoardStorage_storageId_fkey" FOREIGN KEY ("storageId") REFERENCES "Storage"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -293,9 +289,6 @@ ALTER TABLE "MotherBoardStorage" ADD CONSTRAINT "MotherBoardStorage_motherBoardI
 ALTER TABLE "Case" ADD CONSTRAINT "Case_categoryId_fkey" FOREIGN KEY ("categoryId") REFERENCES "Category"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Case" ADD CONSTRAINT "Case_customizeId_fkey" FOREIGN KEY ("customizeId") REFERENCES "Customize"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
 ALTER TABLE "MotherBoardCase" ADD CONSTRAINT "MotherBoardCase_caseId_fkey" FOREIGN KEY ("caseId") REFERENCES "Case"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
@@ -305,19 +298,58 @@ ALTER TABLE "MotherBoardCase" ADD CONSTRAINT "MotherBoardCase_motherBoardId_fkey
 ALTER TABLE "MotherBoard" ADD CONSTRAINT "MotherBoard_categoryId_fkey" FOREIGN KEY ("categoryId") REFERENCES "Category"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "MotherBoard" ADD CONSTRAINT "MotherBoard_customizeId_fkey" FOREIGN KEY ("customizeId") REFERENCES "Customize"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Image" ADD CONSTRAINT "Image_brandId_fkey" FOREIGN KEY ("brandId") REFERENCES "Brand"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Image" ADD CONSTRAINT "Image_brandId_fkey" FOREIGN KEY ("brandId") REFERENCES "Brand"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "Image" ADD CONSTRAINT "Image_categooryId_fkey" FOREIGN KEY ("categooryId") REFERENCES "Category"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Image" ADD CONSTRAINT "Image_categooryId_fkey" FOREIGN KEY ("categooryId") REFERENCES "Category"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "ColorImage" ADD CONSTRAINT "ColorImage_colorId_fkey" FOREIGN KEY ("colorId") REFERENCES "Color"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "ColorImage" ADD CONSTRAINT "ColorImage_imageId_fkey" FOREIGN KEY ("imageId") REFERENCES "Image"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "ColorImage" ADD CONSTRAINT "ColorImage_gpuId_fkey" FOREIGN KEY ("gpuId") REFERENCES "Gpu"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "ColorImage" ADD CONSTRAINT "ColorImage_powerSupplyId_fkey" FOREIGN KEY ("powerSupplyId") REFERENCES "PowerSupply"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "ColorImage" ADD CONSTRAINT "ColorImage_cpuId_fkey" FOREIGN KEY ("cpuId") REFERENCES "Cpu"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "ColorImage" ADD CONSTRAINT "ColorImage_ramId_fkey" FOREIGN KEY ("ramId") REFERENCES "Ram"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "ColorImage" ADD CONSTRAINT "ColorImage_storageId_fkey" FOREIGN KEY ("storageId") REFERENCES "Storage"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "ColorImage" ADD CONSTRAINT "ColorImage_caseId_fkey" FOREIGN KEY ("caseId") REFERENCES "Case"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "ColorImage" ADD CONSTRAINT "ColorImage_motherBoardId_fkey" FOREIGN KEY ("motherBoardId") REFERENCES "MotherBoard"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Customize" ADD CONSTRAINT "Customize_gpuId_fkey" FOREIGN KEY ("gpuId") REFERENCES "Gpu"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Customize" ADD CONSTRAINT "Customize_powerSupplyId_fkey" FOREIGN KEY ("powerSupplyId") REFERENCES "PowerSupply"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Customize" ADD CONSTRAINT "Customize_cpuId_fkey" FOREIGN KEY ("cpuId") REFERENCES "Cpu"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Customize" ADD CONSTRAINT "Customize_ramId_fkey" FOREIGN KEY ("ramId") REFERENCES "Ram"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Customize" ADD CONSTRAINT "Customize_storageId_fkey" FOREIGN KEY ("storageId") REFERENCES "Storage"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Customize" ADD CONSTRAINT "Customize_caseId_fkey" FOREIGN KEY ("caseId") REFERENCES "Case"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Customize" ADD CONSTRAINT "Customize_motherBoardId_fkey" FOREIGN KEY ("motherBoardId") REFERENCES "MotherBoard"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "CustomizeUser" ADD CONSTRAINT "CustomizeUser_customizeId_fkey" FOREIGN KEY ("customizeId") REFERENCES "Customize"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

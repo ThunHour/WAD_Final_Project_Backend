@@ -31,7 +31,7 @@ model Category {
   id           String        @id @default(uuid())
   categoryName String        @unique
   brand        Brand         @relation(fields: [brandId], references: [id])
-  brandId      String        @unique
+  brandId      String        
   Image        Image?
   gpu          Gpu[]
   PowerSupply  PowerSupply[]
@@ -187,10 +187,10 @@ model Image {
   id          String       @id @default(uuid())
   imageUrl    String
   color       ColorImage[]
-  brand       Brand        @relation(fields: [brandId], references: [id])
-  brandId     String       @unique
-  category    Category     @relation(fields: [categooryId], references: [id])
-  categooryId String       @unique
+  brand       Brand?        @relation(fields: [brandId], references: [id])
+  brandId     String?       @unique
+  category    Category?     @relation(fields: [categooryId], references: [id])
+  categooryId String?       @unique
 }
 
 model ColorImage {
