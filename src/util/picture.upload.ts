@@ -1,6 +1,14 @@
 import config from "../config/config";
 import { v4 as uuidv4 } from "uuid";
 export default {
+  async uploadMulti(res: any, files: any, amount: number) {
+    var listImg: string[] = [];
+    for (let i: number = 0; i < amount; i++) {
+      const img = await this.uploadImage(res, "image", files[i]);
+      listImg.push("" + img);
+    }
+    return listImg;
+  },
   async uploadImage(res: any, path: string, file: any) {
     return new Promise((resolve, reject) => {
       if (!["png", "jpg", "jpeg"].includes(file.mimetype.split("/")[1])) {

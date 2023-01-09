@@ -1,7 +1,7 @@
 lockfileVersion: 5.4
 
 specifiers:
-  "@prisma/client": ^4.8.0
+  "@prisma/client": ^4.8.1
   "@types/bcrypt": ^5.0.0
   "@types/cookie-parser": ^1.4.3
   "@types/cors": ^2.8.13
@@ -32,7 +32,7 @@ specifiers:
   uuid: ^9.0.0
 
 dependencies:
-  "@prisma/client": 4.8.0_prisma@4.8.0
+  "@prisma/client": 4.8.1_prisma@4.8.0
   "@types/bcrypt": 5.0.0
   "@types/cookie-parser": 1.4.3
   "@types/cors": 2.8.13
@@ -1703,10 +1703,10 @@ packages:
     engines: { node: ">=10.13.0" }
     dev: false
 
-  /@prisma/client/4.8.0_prisma@4.8.0:
+  /@prisma/client/4.8.1_prisma@4.8.0:
     resolution:
       {
-        integrity: sha512-Y1riB0p2W52kh3zgssP/YAhln3RjBFcJy3uwEiyjmU+TQYh6QTZDRFBo3JtBWuq2FyMOl1Rye8jxzUP+n0l5Cg==,
+        integrity: sha512-d4xhZhETmeXK/yZ7K0KcVOzEfI5YKGGEr4F5SBV04/MU4ncN/HcE28sy3e4Yt8UFW0ZuImKFQJE+9rWt9WbGSQ==,
       }
     engines: { node: ">=14.17" }
     requiresBuild: true
