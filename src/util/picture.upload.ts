@@ -1,6 +1,16 @@
 import config from "../config/config";
 import { v4 as uuidv4 } from "uuid";
 export default {
+  async checkImageIsExist(url: string) {
+    const storageFile = config.bucketStorage(url);
+    storageFile.exists().then((exists: any[]) => {
+      if (exists[0]) {
+        console.log("File exists");
+      } else {
+        console.log("File does not exist");
+      }
+    });
+  },
   async uploadMulti(res: any, files: any, amount: number) {
     var listImg: string[] = [];
     for (let i: number = 0; i < amount; i++) {

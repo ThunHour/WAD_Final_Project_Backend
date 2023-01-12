@@ -5,12 +5,16 @@ export default () => {
   const router = Router();
   router.post(
     "/create",
-    uploadFile.array("file", 12),
+    uploadFile.single("file"),
     brandController.createBrand
   );
   router.get("/getAllBrand", brandController.getAllBrand);
   router.get("/getBrandById/:id", brandController.getBrandById);
   router.delete("/delete/:id", brandController.deleteBrand);
-  // router.put("/create")
+  router.put(
+    "/update/:id",
+    uploadFile.single("file"),
+    brandController.updateBrand
+  );
   return router;
 };
