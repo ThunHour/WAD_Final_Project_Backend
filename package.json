@@ -8,7 +8,7 @@
     "start:dev": "nodemon",
     "build": "rimraf ./build && tsc",
     "start": "pnpm run build && pnpm build/index.ts",
-    "migrate": "npx prisma migrate dev --name init",
+    "migrate": "rimraf ./prisma/migrations && prisma migrate dev --create-only && pnpm prisma migrate dev",
     "prisma-studio": "npx prisma studio",
     "prisma-client": "prisma generate",
     "prepare": "husky install"
@@ -17,6 +17,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@firebase/app-types": "^0.9.0",
+    "@firebase/storage": "^0.10.0",
     "@prisma/client": "^4.8.0",
     "@types/bcrypt": "^5.0.0",
     "@types/cookie-parser": "^1.4.3",

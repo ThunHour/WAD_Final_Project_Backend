@@ -1,4 +1,5 @@
 import firebaseAdmin from "firebase-admin";
+
 const ServiceAccount = require("./storage.json");
 
 const admin = firebaseAdmin.initializeApp({

@@ -1,7 +1,9 @@
 lockfileVersion: 5.4
 
 specifiers:
-  "@prisma/client": ^4.8.1
+  "@firebase/app-types": ^0.9.0
+  "@firebase/storage": ^0.10.0
+  "@prisma/client": ^4.8.0
   "@types/bcrypt": ^5.0.0
   "@types/cookie-parser": ^1.4.3
   "@types/cors": ^2.8.13
@@ -32,6 +34,8 @@ specifiers:
   uuid: ^9.0.0
 
 dependencies:
+  "@firebase/app-types": 0.9.0
+  "@firebase/storage": 0.10.0
   "@prisma/client": 4.8.1_prisma@4.8.0
   "@types/bcrypt": 5.0.0
   "@types/cookie-parser": 1.4.3
@@ -43,7 +47,7 @@ dependencies:
   dotenv: 16.0.3
   express: 4.18.2
   firebase: 9.15.0
-  firebase-admin: 11.4.1
+  firebase-admin: 11.4.1_@firebase+app-types@0.9.0
   multer: 1.4.5-lts.1
   nodemon: 2.0.20
   rimraf: 3.0.2
@@ -685,7 +689,7 @@ packages:
       - encoding
     dev: false
 
-  /@firebase/auth-interop-types/0.1.7_@firebase+util@1.7.3:
+  /@firebase/auth-interop-types/0.1.7_aqkrfbrcnr5kenxqdpztnx2xau:
     resolution:
       {
         integrity: sha512-yA/dTveGGPcc85JP8ZE/KZqfGQyQTBCV10THdI8HTlP1GDvNrhr//J5jAt58MlsCOaO3XmC4DqScPBbtIsR/EA==,
@@ -694,6 +698,7 @@ packages:
       "@firebase/app-types": 0.x
       "@firebase/util": 1.x
     dependencies:
+      "@firebase/app-types": 0.9.0
       "@firebase/util": 1.7.3
     dev: false
 
@@ -761,14 +766,14 @@ packages:
       tslib: 2.4.1
     dev: false
 
-  /@firebase/database-compat/0.2.10:
+  /@firebase/database-compat/0.2.10_@firebase+app-types@0.9.0:
     resolution:
       {
         integrity: sha512-fK+IgUUqVKcWK/gltzDU+B1xauCOfY6vulO8lxoNTkcCGlSxuTtwsdqjGkFmgFRMYjXFWWJ6iFcJ/vXahzwCtA==,
       }
     dependencies:
       "@firebase/component": 0.5.21
-      "@firebase/database": 0.13.10
+      "@firebase/database": 0.13.10_@firebase+app-types@0.9.0
       "@firebase/database-types": 0.9.17
       "@firebase/logger": 0.3.4
       "@firebase/util": 1.7.3
@@ -813,13 +818,13 @@ packages:
       "@firebase/util": 1.7.3
     dev: false
 
-  /@firebase/database/0.13.10:
+  /@firebase/database/0.13.10_@firebase+app-types@0.9.0:
     resolution:
       {
         integrity: sha512-KRucuzZ7ZHQsRdGEmhxId5jyM2yKsjsQWF9yv0dIhlxYg0D8rCVDZc/waoPKA5oV3/SEIoptF8F7R1Vfe7BCQA==,
       }
     dependencies:
-      "@firebase/auth-interop-types": 0.1.7_@firebase+util@1.7.3
+      "@firebase/auth-interop-types": 0.1.7_aqkrfbrcnr5kenxqdpztnx2xau
       "@firebase/component": 0.5.21
       "@firebase/logger": 0.3.4
       "@firebase/util": 1.7.3
@@ -1167,6 +1172,22 @@ packages:
     dependencies:
       "@firebase/app-types": 0.9.0
       "@firebase/util": 1.8.0
+    dev: false
+
+  /@firebase/storage/0.10.0:
+    resolution:
+      {
+        integrity: sha512-2rp7+/bQ1gkUgrqDv5qHf/vlPAOKV+a/h1tnZ8D9zN0/6wc42gqFTORJUZj/A4efVnX7Ix8MWHBe4woO/2Th0w==,
+      }
+    peerDependencies:
+      "@firebase/app": 0.x
+    dependencies:
+      "@firebase/component": 0.6.0
+      "@firebase/util": 1.8.0
+      node-fetch: 2.6.7
+      tslib: 2.4.1
+    transitivePeerDependencies:
+      - encoding
     dev: false
 
   /@firebase/storage/0.10.0_@firebase+app@0.9.0:
@@ -3610,7 +3631,7 @@ packages:
       path-exists: 4.0.0
     dev: true
 
-  /firebase-admin/11.4.1:
+  /firebase-admin/11.4.1_@firebase+app-types@0.9.0:
     resolution:
       {
         integrity: sha512-t5+Pf8rC01TW1KPD5U8Q45AEn7eK+FJaHlpzYStFb62J+MQmN/kB/PWUEsNn+7MNAQ0DZxFUCgJoi+bRmf83oQ==,
@@ -3618,7 +3639,7 @@ packages:
     engines: { node: ">=14" }
     dependencies:
       "@fastify/busboy": 1.2.1
-      "@firebase/database-compat": 0.2.10
+      "@firebase/database-compat": 0.2.10_@firebase+app-types@0.9.0
       "@firebase/database-types": 0.9.17
       "@types/node": 18.11.18
       jsonwebtoken: 9.0.0
