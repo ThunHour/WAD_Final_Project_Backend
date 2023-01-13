@@ -11,10 +11,10 @@ export default {
       }
     });
   },
-  async uploadMulti(res: any, files: any, amount: number) {
+  async uploadMulti(res: any, files: any, amount: number, path: string) {
     var listImg: string[] = [];
     for (let i: number = 0; i < amount; i++) {
-      const img = await this.uploadImage(res, "image", files[i]);
+      const img = await this.uploadImage(res, path, files[i]);
       listImg.push("" + img);
     }
     return listImg;

@@ -170,11 +170,13 @@ model Image {
   id          String    @id @default(uuid())
   imageUrl    String
   color       Color?    @relation(fields: [colorId], references: [id])
-  brand       Brand     @relation(fields: [brandId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  brand       Brand?    @relation(fields: [brandId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   category    Category? @relation(fields: [categooryId], references: [id])
   categooryId String?   @unique
   colorId     String?
-  brandId     String    @unique
+  brandId     String?   @unique
+  partner     Partner?  @relation(fields: [partnerId], references: [id])
+  partnerId   String    @unique
 }
 
 model Customize {
@@ -196,4 +198,12 @@ model Customize {
   storageId     String?
   caseId        String?
   userId        String
+}
+
+model Partner {
+  id        String @id @default(uuid())
+  storeName String @unique
+  location  String
+  webUrl    String
+  logo      Image?
 }

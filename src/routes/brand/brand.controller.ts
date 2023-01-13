@@ -1,7 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import brandService from "./brand.service";
 import upload from "../../util/picture.upload";
-import { Brand } from "@prisma/client";
 import { respone } from "../../payload/respone/defaultRespone";
 async function createBrand(req: Request, res: Response, next: NextFunction) {
   try {
@@ -13,10 +12,10 @@ async function createBrand(req: Request, res: Response, next: NextFunction) {
     }
     const checkBrand = await brandService.getBrandByName(brandName);
     if (checkBrand != null) {
-      respone(res, null, "brand already exist!", 409);
+      respone(res, null, "Brand already exist!", 409);
       return;
     }
-    var up = await upload.uploadImage(res, "image", image);
+    var up = await upload.uploadImage(res, "brand", image);
     var brand = await brandService.createBrandService(brandName, up);
 
     respone(res, brand, "Create brand successfully", 201);
@@ -31,7 +30,7 @@ async function getAllBrand(req: Request, res: Response, next: NextFunction) {
       respone(res, null, "There are not brand found", 404);
       return;
     }
-    respone(res, brand, "Get Brand successfully", 200);
+    respone(res, brand, "Get brand successfully", 200);
   } catch (error) {
     respone(res, null, `${error}`, 500);
   }
@@ -41,7 +40,7 @@ async function getBrandById(req: Request, res: Response, next: NextFunction) {
   try {
     const { id } = req.params;
     if (id == null) {
-      respone(res, null, "id must not null", 400);
+      respone(res, null, "Id must not null", 400);
       return;
     }
     const brand = await brandService.getBrandByIdService(id);
@@ -51,7 +50,7 @@ async function getBrandById(req: Request, res: Response, next: NextFunction) {
       respone(res, null, "There are not brand found", 404);
       return;
     }
-    respone(res, brand, "Get Brand successfully", 200);
+    respone(res, brand, "Get brand successfully", 200);
   } catch (error) {
     respone(res, null, `${error}`, 500);
   }
@@ -60,11 +59,15 @@ async function deleteBrand(req: Request, res: Response, next: NextFunction) {
   try {
     const { id } = req.params;
     if (id == null) {
-      res.status(400).send("id must not null");
+      respone(res, null, "id must not null", 400);
       return;
     }
     const brand = await brandService.deleteBrandService(id);
-    res.status(200).send(brand);
+    if (brand == null) {
+      respone(res, null, "Brand do not exist!", 404);
+      return;
+    }
+    respone(res, brand, "Delete brand Successfully", 200);
   } catch (error) {
     respone(res, null, `${error}`, 500);
   }
@@ -81,14 +84,14 @@ async function updateBrand(req: Request, res: Response, next: NextFunction) {
 
     const checkBrand = await brandService.getBrandByIdService(id);
     if (checkBrand == null) {
-      respone(res, null, "Brand not exist", 404);
+      respone(res, null, "Brand do not exist", 404);
       return;
     }
 
     var up =
       img == undefined
         ? checkBrand.Image?.imageUrl
-        : await upload.uploadImage(res, "image", img);
+        : await upload.uploadImage(res, "brand", img);
     const brand = await brandService.updateBrandService(
       id,
       name == null ? checkBrand.brandName : name,

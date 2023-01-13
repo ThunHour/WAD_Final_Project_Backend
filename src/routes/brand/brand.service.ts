@@ -1,5 +1,4 @@
-import { Brand, PrismaClient } from "@prisma/client";
-const ServiceAccount = require("../../config/firebase/storage.json");
+import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 async function createBrandService(brandName: string, img: any) {
