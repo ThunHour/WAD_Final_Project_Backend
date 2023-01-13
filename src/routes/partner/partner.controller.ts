@@ -3,6 +3,7 @@ import { respone } from "../../payload/respone/defaultRespone";
 import partnerService from "./partner.service";
 import upload from "../../util/picture.upload";
 import { Partner } from "@prisma/client";
+
 async function createPartner(req: Request, res: Response, next: NextFunction) {
   try {
     var image = req.file;
