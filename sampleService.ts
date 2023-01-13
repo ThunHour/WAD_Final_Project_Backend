@@ -2,7 +2,6 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 async function createBrandService(brandName: string, img: any) {}
-
 async function getAllBrandServie() {}
 async function getBrandByIdService(id: string) {}
 async function deleteBrandService(id: string) {}
