@@ -2,15 +2,22 @@ import { NextFunction, Request, Response } from "express";
 import categoryService from "./category.service";
 import upload from "../../util/picture.upload";
 import { respone } from "../../payload/respone/defaultRespone";
+import { Category } from "@prisma/client";
 async function createCategory(req: Request, res: Response, next: NextFunction) {
   try {
     var image = req.file;
-    var categoryName = req.body.categoryName;
-    if (categoryName == null || image == undefined) {
+    var categoryName = req.body as Category;
+    if (
+      categoryName.categoryName == null ||
+      image == undefined ||
+      categoryName.brandId == null
+    ) {
       respone(res, null, "bad request", 400);
       return;
     }
-    const checkCategory = await categoryService.getCategoryByName(categoryName);
+    const checkCategory = await categoryService.getCategoryByName(
+      categoryName.categoryName
+    );
     if (checkCategory != null) {
       respone(res, null, "Category already exist!", 409);
       return;

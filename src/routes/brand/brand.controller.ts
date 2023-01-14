@@ -16,7 +16,10 @@ async function createBrand(req: Request, res: Response, next: NextFunction) {
       return;
     }
     var up = await upload.uploadImage(res, "brand", image);
-    var brand = await brandService.createBrandService(brandName, up);
+    const brand = await brandService.createBrandService(
+      brandName,
+      up as string
+    );
 
     respone(res, brand, "Create brand successfully", 201);
   } catch (error) {

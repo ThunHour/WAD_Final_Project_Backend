@@ -1,8 +1,8 @@
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
-async function createBrandService(brandName: string, img: any) {
-  const brand = await prisma.brand.create({
+async function createBrandService(brandName: string, img: string) {
+  return await prisma.brand.create({
     data: {
       brandName: brandName,
       Image: {
@@ -12,7 +12,6 @@ async function createBrandService(brandName: string, img: any) {
       },
     },
   });
-  return brand;
 }
 
 async function getAllBrandServie() {
@@ -22,6 +21,18 @@ async function getAllBrandServie() {
         select: {
           id: true,
           imageUrl: true,
+        },
+      },
+      category: {
+        select: {
+          id: true,
+          categoryName: true,
+          Image: {
+            select: {
+              id: true,
+              imageUrl: true,
+            },
+          },
         },
       },
     },
@@ -35,6 +46,18 @@ async function getBrandByIdService(id: string) {
         select: {
           id: true,
           imageUrl: true,
+        },
+      },
+      category: {
+        select: {
+          id: true,
+          categoryName: true,
+          Image: {
+            select: {
+              id: true,
+              imageUrl: true,
+            },
+          },
         },
       },
     },

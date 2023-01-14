@@ -31,7 +31,7 @@ model Brand {
 model Category {
   id           String        @id @default(uuid())
   categoryName String        @unique
-  brand        Brand         @relation(fields: [brandId], references: [id])
+  brand        Brand         @relation(fields: [brandId], references: [id],onDelete: Cascade,onUpdate: Cascade)
   brandId      String
   Image        Image?
   gpu          Gpu[]
@@ -162,10 +162,10 @@ model Image {
   brand       Brand?    @relation(fields: [brandId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   category    Category? @relation(fields: [categooryId], references: [id])
   categooryId String?   @unique
-  colorId     String
+  colorId     String? 
   brandId     String?   @unique
   partner     Partner?  @relation(fields: [partnerId], references: [id])
-  partnerId   String    @unique
+  partnerId   String?    @unique
 }
 
 model Customize {

@@ -1,11 +1,13 @@
 import { Case } from "@prisma/client";
 import { NextFunction, Request, Response } from "express";
+import upload from "../../util/picture.upload";
 import { respone } from "../../payload/respone/defaultRespone";
 import caseService from "./case.service";
 async function createCase(req: Request, res: Response, next: NextFunction) {
   try {
     var image = req.files;
     var caseDto = req.body as Case;
+    const amount = image?.length;
     if (
       caseDto.categoryId == null ||
       image == undefined ||
@@ -16,6 +18,9 @@ async function createCase(req: Request, res: Response, next: NextFunction) {
       respone(res, null, "bad request", 400);
       return;
     }
+    var up = await upload.uploadMulti(res, image, amount as number, "case");
+
+    // var brand = await caseService.createCaseService(brandName, up);
   } catch (error) {
     respone(res, null, `${error}`, 500);
   }
