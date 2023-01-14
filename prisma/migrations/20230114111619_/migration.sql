@@ -8,6 +8,7 @@ CREATE TABLE "User" (
     "name" TEXT NOT NULL,
     "password" TEXT NOT NULL,
     "role" "Role" NOT NULL DEFAULT 'USER',
+    "phoneNumber" TEXT NOT NULL,
 
     CONSTRAINT "User_pkey" PRIMARY KEY ("id")
 );
@@ -36,7 +37,6 @@ CREATE TABLE "Gpu" (
     "model" TEXT NOT NULL,
     "spec" TEXT NOT NULL,
     "price" DOUBLE PRECISION NOT NULL,
-    "customizeId" TEXT NOT NULL,
 
     CONSTRAINT "Gpu_pkey" PRIMARY KEY ("id")
 );
@@ -48,8 +48,6 @@ CREATE TABLE "PowerSupply" (
     "model" TEXT NOT NULL,
     "spec" TEXT NOT NULL,
     "price" DOUBLE PRECISION NOT NULL,
-    "customizeId" TEXT NOT NULL,
-    "colorId" TEXT NOT NULL,
 
     CONSTRAINT "PowerSupply_pkey" PRIMARY KEY ("id")
 );
@@ -62,8 +60,6 @@ CREATE TABLE "Cpu" (
     "spec" TEXT NOT NULL,
     "price" DOUBLE PRECISION NOT NULL,
     "type" TEXT NOT NULL,
-    "customizeId" TEXT,
-    "colorId" TEXT NOT NULL,
 
     CONSTRAINT "Cpu_pkey" PRIMARY KEY ("id")
 );
@@ -76,8 +72,6 @@ CREATE TABLE "Ram" (
     "spec" TEXT NOT NULL,
     "price" DOUBLE PRECISION NOT NULL,
     "type" TEXT NOT NULL,
-    "customizeId" TEXT NOT NULL,
-    "colorId" TEXT NOT NULL,
 
     CONSTRAINT "Ram_pkey" PRIMARY KEY ("id")
 );
@@ -89,8 +83,6 @@ CREATE TABLE "Storage" (
     "model" TEXT NOT NULL,
     "spec" TEXT NOT NULL,
     "price" DOUBLE PRECISION NOT NULL,
-    "customizeId" TEXT NOT NULL,
-    "colorId" TEXT NOT NULL,
 
     CONSTRAINT "Storage_pkey" PRIMARY KEY ("id")
 );
@@ -102,8 +94,6 @@ CREATE TABLE "Case" (
     "model" TEXT NOT NULL,
     "spec" TEXT NOT NULL,
     "price" DOUBLE PRECISION NOT NULL,
-    "customizeId" TEXT NOT NULL,
-    "colorId" TEXT NOT NULL,
 
     CONSTRAINT "Case_pkey" PRIMARY KEY ("id")
 );
@@ -115,7 +105,6 @@ CREATE TABLE "MotherBoard" (
     "model" TEXT NOT NULL,
     "spec" TEXT NOT NULL,
     "price" DOUBLE PRECISION NOT NULL,
-    "customizeId" TEXT NOT NULL,
 
     CONSTRAINT "MotherBoard_pkey" PRIMARY KEY ("id")
 );
@@ -140,7 +129,7 @@ CREATE TABLE "Image" (
     "id" TEXT NOT NULL,
     "imageUrl" TEXT NOT NULL,
     "categooryId" TEXT,
-    "colorId" TEXT,
+    "colorId" TEXT NOT NULL,
     "brandId" TEXT,
     "partnerId" TEXT NOT NULL,
 
@@ -208,27 +197,6 @@ CREATE UNIQUE INDEX "Brand_brandName_key" ON "Brand"("brandName");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Category_categoryName_key" ON "Category"("categoryName");
-
--- CreateIndex
-CREATE UNIQUE INDEX "Gpu_customizeId_key" ON "Gpu"("customizeId");
-
--- CreateIndex
-CREATE UNIQUE INDEX "PowerSupply_customizeId_key" ON "PowerSupply"("customizeId");
-
--- CreateIndex
-CREATE UNIQUE INDEX "Cpu_customizeId_key" ON "Cpu"("customizeId");
-
--- CreateIndex
-CREATE UNIQUE INDEX "Ram_customizeId_key" ON "Ram"("customizeId");
-
--- CreateIndex
-CREATE UNIQUE INDEX "Storage_customizeId_key" ON "Storage"("customizeId");
-
--- CreateIndex
-CREATE UNIQUE INDEX "Case_customizeId_key" ON "Case"("customizeId");
-
--- CreateIndex
-CREATE UNIQUE INDEX "MotherBoard_customizeId_key" ON "MotherBoard"("customizeId");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Image_categooryId_key" ON "Image"("categooryId");
@@ -312,7 +280,7 @@ ALTER TABLE "Color" ADD CONSTRAINT "Color_caseId_fkey" FOREIGN KEY ("caseId") RE
 ALTER TABLE "Color" ADD CONSTRAINT "Color_motherBoardId_fkey" FOREIGN KEY ("motherBoardId") REFERENCES "MotherBoard"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Image" ADD CONSTRAINT "Image_colorId_fkey" FOREIGN KEY ("colorId") REFERENCES "Color"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "Image" ADD CONSTRAINT "Image_colorId_fkey" FOREIGN KEY ("colorId") REFERENCES "Color"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Image" ADD CONSTRAINT "Image_brandId_fkey" FOREIGN KEY ("brandId") REFERENCES "Brand"("id") ON DELETE CASCADE ON UPDATE CASCADE;

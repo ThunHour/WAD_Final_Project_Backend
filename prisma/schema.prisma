@@ -16,7 +16,7 @@ model User {
   name        String      @unique
   password    String
   role        Role        @default(USER)
-  phoneNumber String      
+  phoneNumber String
   //collection of customize product
   customize   Customize[]
 }
@@ -44,28 +44,25 @@ model Category {
 }
 
 model Gpu {
-  id          String      @id @default(uuid())
-  category    Category    @relation(fields: [categoryId], references: [id])
-  categoryId  String
-  model       String
-  spec        String
-  price       Float
-  color       Color[]
-  customize   Customize[]
-  customizeId String      @unique
+  id         String      @id @default(uuid())
+  category   Category    @relation(fields: [categoryId], references: [id])
+  categoryId String
+  model      String
+  spec       String
+  price      Float
+  color      Color[]
+  customize  Customize[]
 }
 
 model PowerSupply {
-  id          String      @id @default(uuid())
-  category    Category    @relation(fields: [categoryId], references: [id])
-  categoryId  String
-  model       String
-  spec        String
-  price       Float
-  color       Color[]
-  customize   Customize[]
-  customizeId String      @unique
-  colorId     String
+  id         String      @id @default(uuid())
+  category   Category    @relation(fields: [categoryId], references: [id])
+  categoryId String
+  model      String
+  spec       String
+  price      Float
+  color      Color[]
+  customize  Customize[]
 }
 
 model Cpu {
@@ -79,8 +76,6 @@ model Cpu {
   color       Color[]
   motherBoard MotherBoard[]
   customize   Customize[]
-  customizeId String?       @unique
-  colorId     String
 }
 
 model Ram {
@@ -94,8 +89,6 @@ model Ram {
   type        String
   motherBoard MotherBoard[]
   customize   Customize[]
-  customizeId String        @unique
-  colorId     String
 }
 
 model Storage {
@@ -108,8 +101,6 @@ model Storage {
   price       Float
   motherBoard MotherBoard[]
   customize   Customize[]
-  customizeId String        @unique
-  colorId     String
 }
 
 model Case {
@@ -122,24 +113,21 @@ model Case {
   price       Float
   motherBoard MotherBoard[]
   customize   Customize[]
-  customizeId String        @unique
-  colorId     String
 }
 
 model MotherBoard {
-  id          String      @id @default(uuid())
-  category    Category    @relation(fields: [categoryId], references: [id])
-  categoryId  String
-  model       String
-  spec        String
-  price       Float
-  color       Color[]
-  cpu         Cpu[]
-  Ram         Ram[]
-  storage     Storage[]
-  case        Case[]
-  customize   Customize[]
-  customizeId String      @unique
+  id         String      @id @default(uuid())
+  category   Category    @relation(fields: [categoryId], references: [id])
+  categoryId String
+  model      String
+  spec       String
+  price      Float
+  color      Color[]
+  cpu        Cpu[]
+  Ram        Ram[]
+  storage    Storage[]
+  case       Case[]
+  customize  Customize[]
 }
 
 enum Role {
@@ -174,7 +162,7 @@ model Image {
   brand       Brand?    @relation(fields: [brandId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   category    Category? @relation(fields: [categooryId], references: [id])
   categooryId String?   @unique
-  colorId     String?
+  colorId     String
   brandId     String?   @unique
   partner     Partner?  @relation(fields: [partnerId], references: [id])
   partnerId   String    @unique

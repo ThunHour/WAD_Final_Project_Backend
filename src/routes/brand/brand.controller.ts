@@ -44,7 +44,6 @@ async function getBrandById(req: Request, res: Response, next: NextFunction) {
       return;
     }
     const brand = await brandService.getBrandByIdService(id);
-    console.log(brand);
 
     if (brand == null) {
       respone(res, null, "There are not brand found", 404);
