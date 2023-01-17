@@ -1,26 +1,29 @@
-import { Case } from "@prisma/client";
+import { Case, Color, Image } from "@prisma/client";
 import { NextFunction, Request, Response } from "express";
 import upload from "../../util/picture.upload";
 import { respone } from "../../payload/respone/defaultRespone";
 import caseService from "./case.service";
+import { caseRequest } from "../../payload/request/case.Request";
 async function createCase(req: Request, res: Response, next: NextFunction) {
   try {
     var image = req.files;
-    var caseDto = req.body as Case;
+    var caseDto = req.body as caseRequest;
     const amount = image?.length;
     if (
       caseDto.categoryId == null ||
       image == undefined ||
       caseDto.model == null ||
       caseDto.price == null ||
-      caseDto.spec == null
+      caseDto.spec == null ||
+      caseDto.color == null
     ) {
       respone(res, null, "bad request", 400);
       return;
     }
     var up = await upload.uploadMulti(res, image, amount as number, "case");
 
-    // var brand = await caseService.createCaseService(brandName, up);
+    var cases = await caseService.createCaseService(caseDto, up);
+    respone(res, cases, "Create case successfully", 201);
   } catch (error) {
     respone(res, null, `${error}`, 500);
   }
@@ -75,6 +78,27 @@ async function deleteCase(req: Request, res: Response, next: NextFunction) {
 }
 async function updateCase(req: Request, res: Response, next: NextFunction) {
   try {
+    var image = req.files;
+    var caseDto = req.body as caseRequest;
+    const amount = image?.length;
+    const { id } = req.params;
+    if (
+      id == null ||
+      caseDto.categoryId == null ||
+      (image == undefined &&
+        caseDto.model == null &&
+        caseDto.price == null &&
+        caseDto.spec == null &&
+        caseDto.color == null)
+    ) {
+      respone(res, null, "bad request", 400);
+      return;
+    }
+    const checkCase = await caseService.getCaseByIdService(id);
+    if (checkCase == null) {
+      respone(res, null, "There are not case found", 404);
+      return;
+    }
   } catch (error) {
     respone(res, null, `${error}`, 500);
   }

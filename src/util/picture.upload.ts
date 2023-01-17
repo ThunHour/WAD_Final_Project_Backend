@@ -1,5 +1,6 @@
 import config from "../config/config";
 import { v4 as uuidv4 } from "uuid";
+import { Image } from "@prisma/client";
 export default {
   async checkImageIsExist(url: string) {
     const storageFile = config.bucketStorage(url);
@@ -12,10 +13,10 @@ export default {
     });
   },
   async uploadMulti(res: any, files: any, amount: number, path: string) {
-    var listImg: string[] = [];
+    var listImg: Image[] = [];
     for (let i: number = 0; i < amount; i++) {
       const img = await this.uploadImage(res, path, files[i]);
-      listImg.push("" + img);
+      listImg.push({ imageUrl: img } as Image);
     }
     return listImg;
   },

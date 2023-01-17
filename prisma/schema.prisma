@@ -17,7 +17,6 @@ model User {
   password    String
   role        Role        @default(USER)
   phoneNumber String
-  //collection of customize product
   customize   Customize[]
 }
 
@@ -29,105 +28,154 @@ model Brand {
 }
 
 model Category {
-  id           String        @id @default(uuid())
-  categoryName String        @unique
-  brand        Brand         @relation(fields: [brandId], references: [id],onDelete: Cascade,onUpdate: Cascade)
+  id           String     @id @default(uuid()) @map("category_id")
+  categoryName String     @unique
+  brand        Brand      @relation(fields: [brandId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   brandId      String
   Image        Image?
-  gpu          Gpu[]
-  PowerSupply  PowerSupply[]
-  Cpu          Cpu[]
-  Ram          Ram[]
-  Storage      Storage[]
-  Case         Case[]
-  MotherBoard  MotherBoard[]
+  panelGpu     PanelGpu[]
+}
+
+model PanelGpu {
+  id         String    @id @default(uuid())
+  name       String    @unique
+  gpu        Gpu[]
+  Category   Category? @relation(fields: [categoryId], references: [id])
+  categoryId String?
 }
 
 model Gpu {
-  id         String      @id @default(uuid())
-  category   Category    @relation(fields: [categoryId], references: [id])
-  categoryId String
-  model      String
-  spec       String
-  price      Float
-  color      Color[]
-  customize  Customize[]
+  id        String      @id @default(uuid())
+  model     String
+  spec      String
+  price     Float
+  color     Color[]
+  customize Customize[]
+  Panel     Panel?      @relation(fields: [panelId], references: [id])
+  panelId   String?
 }
 
-model PowerSupply {
-  id         String      @id @default(uuid())
-  category   Category    @relation(fields: [categoryId], references: [id])
-  categoryId String
-  model      String
-  spec       String
-  price      Float
-  color      Color[]
-  customize  Customize[]
+model PanelCpu {
+  id         String    @id @default(uuid())
+  name       String    @unique
+  gpu        Gpu[]
+  Category   Category? @relation(fields: [categoryId], references: [id])
+  categoryId String?
 }
 
 model Cpu {
   id          String        @id @default(uuid())
-  category    Category      @relation(fields: [categoryId], references: [id])
-  categoryId  String
   model       String
   spec        String
   price       Float
   type        String
-  color       Color[]
+  color       Color?
   motherBoard MotherBoard[]
   customize   Customize[]
+  Panel       Panel?        @relation(fields: [panelId], references: [id])
+  panelId     String?
+}
+
+model PanelPowerSupply {
+  id         String    @id @default(uuid())
+  name       String    @unique
+  gpu        Gpu[]
+  Category   Category? @relation(fields: [categoryId], references: [id])
+  categoryId String?
+}
+
+model PowerSupply {
+  id        String      @id @default(uuid())
+  model     String
+  spec      String
+  price     Float
+  color     Color?
+  customize Customize[]
+  Panel     Panel?      @relation(fields: [panelId], references: [id])
+  panelId   String?
+}
+
+model PanelStorage {
+  id         String    @id @default(uuid())
+  name       String    @unique
+  gpu        Gpu[]
+  Category   Category? @relation(fields: [categoryId], references: [id])
+  categoryId String?
+}
+
+model Storage {
+  id String @id @default(uuid())
+
+  model       String
+  color       Color?
+  spec        String
+  price       Float
+  motherBoard MotherBoard[]
+  customize   Customize[]
+  Panel       Panel?        @relation(fields: [panelId], references: [id])
+  panelId     String?
+}
+
+model PanelRam {
+  id         String    @id @default(uuid())
+  name       String    @unique
+  Ram        Ram[]
+  Category   Category? @relation(fields: [categoryId], references: [id])
+  categoryId String?
 }
 
 model Ram {
   id          String        @id @default(uuid())
-  category    Category      @relation(fields: [categoryId], references: [id])
-  categoryId  String
   model       String
   spec        String
   price       Float
-  color       Color[]
+  color       Color?
   type        String
   motherBoard MotherBoard[]
   customize   Customize[]
+  Panel       PanelRam?     @relation(fields: [panelId], references: [id])
+  panelId     String?
 }
 
-model Storage {
-  id          String        @id @default(uuid())
-  category    Category      @relation(fields: [categoryId], references: [id])
-  categoryId  String
-  model       String
-  color       Color[]
-  spec        String
-  price       Float
-  motherBoard MotherBoard[]
-  customize   Customize[]
+model PanelCase {
+  id               String             @id @default(uuid())
+  name             String             @unique
+  case             Case[]
+  panelmotherBoard PanelMotherBoard[]
+  Category         Category?          @relation(fields: [categoryId], references: [id])
+  categoryId       String?
 }
 
 model Case {
-  id          String        @id @default(uuid())
-  category    Category      @relation(fields: [categoryId], references: [id])
-  categoryId  String
-  model       String
-  color       Color[]
-  spec        String
-  price       Float
-  motherBoard MotherBoard[]
-  customize   Customize[]
+  id        String      @id @default(uuid())
+  model     String
+  color     Color?
+  price     Float
+  customize Customize[]
+  panelcase PanelCase?  @relation(fields: [panelId], references: [id])
+  panelId   String?
+}
+
+model PanelMotherBoard {
+  id           String         @id @default(uuid())
+  name         String         @unique
+  motherBoard  MotherBoard[]
+  panelcpu     PanelCpu[]
+  panelRam     PanelRam[]
+  panelstorage PanelStorage[]
+  panelcase    PanelCase[]
+  category     Category?      @relation(fields: [categoryId], references: [id])
+  categoryId   String?
 }
 
 model MotherBoard {
-  id         String      @id @default(uuid())
-  category   Category    @relation(fields: [categoryId], references: [id])
-  categoryId String
-  model      String
-  spec       String
-  price      Float
-  color      Color[]
-  cpu        Cpu[]
-  Ram        Ram[]
-  storage    Storage[]
-  case       Case[]
-  customize  Customize[]
+  id               String            @id @default(uuid())
+  model            String
+  price            Float
+  color            Color?
+  customize        Customize[]
+  panelMotherboard PanelMotherBoard? @relation(fields: [panelId], references: [id])
+  panelId          String?
 }
 
 enum Role {
@@ -162,10 +210,10 @@ model Image {
   brand       Brand?    @relation(fields: [brandId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   category    Category? @relation(fields: [categooryId], references: [id])
   categooryId String?   @unique
-  colorId     String? 
+  colorId     String?
   brandId     String?   @unique
   partner     Partner?  @relation(fields: [partnerId], references: [id])
-  partnerId   String?    @unique
+  partnerId   String?   @unique
 }
 
 model Customize {

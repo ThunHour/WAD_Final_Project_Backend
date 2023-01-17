@@ -1,4 +1,4 @@
-export interface caseDto {
+export interface caseRequest {
   categoryId: string;
   model: string;
   color: string;
