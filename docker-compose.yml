@@ -12,6 +12,7 @@ services:
   db:
     image: postgres:14.3-alpine
     container_name: postgres-wadfinal
+    restart: unless-stopped
     environment:
       POSTGRES_USER: wadfinal
       POSTGRES_PASSWORD: 123

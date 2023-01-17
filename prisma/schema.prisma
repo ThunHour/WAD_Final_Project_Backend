@@ -28,12 +28,18 @@ model Brand {
 }
 
 model Category {
-  id           String     @id @default(uuid()) @map("category_id")
-  categoryName String     @unique
-  brand        Brand      @relation(fields: [brandId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  brandId      String
-  Image        Image?
-  panelGpu     PanelGpu[]
+  id               String             @id @default(uuid()) @map("category_id")
+  categoryName     String             @unique
+  brand            Brand              @relation(fields: [brandId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  brandId          String
+  Image            Image?
+  panelGpu         PanelGpu[]
+  panelcpu         PanelCpu[]
+  PanelCase        PanelCase[]
+  panelMotherBoard PanelMotherBoard[]
+  panelRam         PanelRam[]
+  panelStorage     PanelStorage[]
+  panelPowerSupply PanelPowerSupply[]
 }
 
 model PanelGpu {
@@ -45,96 +51,95 @@ model PanelGpu {
 }
 
 model Gpu {
-  id        String      @id @default(uuid())
-  model     String
-  spec      String
-  price     Float
-  color     Color[]
-  customize Customize[]
-  Panel     Panel?      @relation(fields: [panelId], references: [id])
-  panelId   String?
+  id         String      @id @default(uuid())
+  model      String
+  spec       String
+  price      Float
+  color      Color[]
+  customize  Customize[]
+  panelGpu   PanelGpu?   @relation(fields: [paneGpulId], references: [id])
+  paneGpulId String?
 }
 
 model PanelCpu {
-  id         String    @id @default(uuid())
-  name       String    @unique
-  gpu        Gpu[]
-  Category   Category? @relation(fields: [categoryId], references: [id])
-  categoryId String?
+  id               String             @id @default(uuid())
+  name             String             @unique
+  cpu              Cpu[]
+  panelmotherBoard PanelMotherBoard[]
+  Category         Category?          @relation(fields: [categoryId], references: [id])
+  categoryId       String?
 }
 
 model Cpu {
-  id          String        @id @default(uuid())
-  model       String
-  spec        String
-  price       Float
-  type        String
-  color       Color?
-  motherBoard MotherBoard[]
-  customize   Customize[]
-  Panel       Panel?        @relation(fields: [panelId], references: [id])
-  panelId     String?
+  id         String      @id @default(uuid())
+  model      String
+  spec       String
+  price      Float
+  type       String
+  color      Color?
+  customize  Customize[]
+  panelCpu   PanelCpu?   @relation(fields: [panelCpuId], references: [id])
+  panelCpuId String?
 }
 
 model PanelPowerSupply {
-  id         String    @id @default(uuid())
-  name       String    @unique
-  gpu        Gpu[]
-  Category   Category? @relation(fields: [categoryId], references: [id])
-  categoryId String?
+  id          String        @id @default(uuid())
+  name        String        @unique
+  powerSupply PowerSupply[]
+  Category    Category?     @relation(fields: [categoryId], references: [id])
+  categoryId  String?
 }
 
 model PowerSupply {
-  id        String      @id @default(uuid())
-  model     String
-  spec      String
-  price     Float
-  color     Color?
-  customize Customize[]
-  Panel     Panel?      @relation(fields: [panelId], references: [id])
-  panelId   String?
+  id                 String            @id @default(uuid())
+  model              String
+  spec               String
+  price              Float
+  color              Color?
+  customize          Customize[]
+  panelPowerSupply   PanelPowerSupply? @relation(fields: [PanelPowerSupplyId], references: [id])
+  PanelPowerSupplyId String?
 }
 
 model PanelStorage {
-  id         String    @id @default(uuid())
-  name       String    @unique
-  gpu        Gpu[]
-  Category   Category? @relation(fields: [categoryId], references: [id])
-  categoryId String?
+  id               String             @id @default(uuid())
+  name             String             @unique
+  storage          Storage[]
+  panelmotherBoard PanelMotherBoard[]
+  Category         Category?          @relation(fields: [categoryId], references: [id])
+  categoryId       String?
 }
 
 model Storage {
-  id String @id @default(uuid())
-
-  model       String
-  color       Color?
-  spec        String
-  price       Float
-  motherBoard MotherBoard[]
-  customize   Customize[]
-  Panel       Panel?        @relation(fields: [panelId], references: [id])
-  panelId     String?
+  id             String        @id @default(uuid())
+  model          String
+  color          Color?
+  spec           String
+  price          Float
+  customize      Customize[]
+  panelStorage   PanelStorage? @relation(fields: [panelStorageId], references: [id])
+  panelStorageId String?
 }
 
 model PanelRam {
-  id         String    @id @default(uuid())
-  name       String    @unique
-  Ram        Ram[]
-  Category   Category? @relation(fields: [categoryId], references: [id])
-  categoryId String?
+  id               String             @id @default(uuid())
+  name             String             @unique
+  Ram              Ram[]
+  panelmotherBoard PanelMotherBoard[]
+  Category         Category?          @relation(fields: [categoryId], references: [id])
+  categoryId       String?
 }
 
 model Ram {
-  id          String        @id @default(uuid())
-  model       String
-  spec        String
-  price       Float
-  color       Color?
-  type        String
-  motherBoard MotherBoard[]
-  customize   Customize[]
-  Panel       PanelRam?     @relation(fields: [panelId], references: [id])
-  panelId     String?
+  id         String      @id @default(uuid())
+  model      String
+  spec       String
+  price      Float
+  color      Color?
+  type       String
+  customize  Customize[]
+  panelRam   PanelRam?   @relation(fields: [panelRamId], references: [id])
+  panelRamId String?
 }
 
 model PanelCase {
@@ -147,13 +152,13 @@ model PanelCase {
 }
 
 model Case {
-  id        String      @id @default(uuid())
-  model     String
-  color     Color?
-  price     Float
-  customize Customize[]
-  panelcase PanelCase?  @relation(fields: [panelId], references: [id])
-  panelId   String?
+  id          String      @id @default(uuid())
+  model       String
+  color       Color?
+  price       Float
+  customize   Customize[]
+  panelCase   PanelCase?  @relation(fields: [panelCaseId], references: [id])
+  panelCaseId String?
 }
 
 model PanelMotherBoard {
@@ -169,13 +174,13 @@ model PanelMotherBoard {
 }
 
 model MotherBoard {
-  id               String            @id @default(uuid())
-  model            String
-  price            Float
-  color            Color?
-  customize        Customize[]
-  panelMotherboard PanelMotherBoard? @relation(fields: [panelId], references: [id])
-  panelId          String?
+  id                 String            @id @default(uuid())
+  model              String
+  price              Float
+  color              Color?
+  customize          Customize[]
+  panelMotherBoard   PanelMotherBoard? @relation(fields: [panelMotherBoardId], references: [id])
+  panelMotherBoardId String?
 }
 
 enum Role {
@@ -188,19 +193,19 @@ model Color {
   color         String
   image         Image[]
   Gpu           Gpu?         @relation(fields: [gpuId], references: [id])
-  gpuId         String?
+  gpuId         String?      @unique
   PowerSupply   PowerSupply? @relation(fields: [powerSupplyId], references: [id])
-  powerSupplyId String?
+  powerSupplyId String?      @unique
   Cpu           Cpu?         @relation(fields: [cpuId], references: [id])
-  cpuId         String?
+  cpuId         String?      @unique
   Ram           Ram?         @relation(fields: [ramId], references: [id])
-  ramId         String?
+  ramId         String?      @unique
   Storage       Storage?     @relation(fields: [storageId], references: [id])
-  storageId     String?
+  storageId     String?      @unique
   Case          Case?        @relation(fields: [caseId], references: [id])
-  caseId        String?
+  caseId        String?      @unique
   MotherBoard   MotherBoard? @relation(fields: [motherBoardId], references: [id])
-  motherBoardId String?
+  motherBoardId String?      @unique
 }
 
 model Image {
