@@ -52,7 +52,7 @@ async function getPartnerById(req: Request, res: Response, next: NextFunction) {
 async function getAllPartner(req: Request, res: Response, next: NextFunction) {
   try {
     const partner = await partnerService.getAllPartnerServie();
-    if (partner == null) {
+    if (partner == null || partner.length == 0) {
       respone(res, null, "There are not partner", 404);
       return;
     }

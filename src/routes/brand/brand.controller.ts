@@ -29,7 +29,7 @@ async function createBrand(req: Request, res: Response, next: NextFunction) {
 async function getAllBrand(req: Request, res: Response, next: NextFunction) {
   try {
     const brand = await brandService.getAllBrandServie();
-    if (brand == null) {
+    if (brand == null || brand.length == 0) {
       respone(res, null, "There are not brand found", 404);
       return;
     }

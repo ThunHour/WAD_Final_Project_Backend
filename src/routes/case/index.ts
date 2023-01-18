@@ -6,11 +6,16 @@ export default () => {
   router.post("/create", uploadFile.array("file"), caseController.createCase);
   router.get("/getAllCase", caseController.getAllCase);
   router.get("/getCaseById/:id", caseController.getCaseById);
-  router.delete("/delete/:id", caseController.deleteCase);
+  router.delete("/delete/:id/:itemId", caseController.deleteCase);
   router.put(
     "/update/:id",
     uploadFile.array("file"),
     caseController.updateCase
+  );
+  router.post(
+    "/createWithExistPanel/:id",
+    uploadFile.array("file"),
+    caseController.createCaseWithExistPanel
   );
   return router;
 };

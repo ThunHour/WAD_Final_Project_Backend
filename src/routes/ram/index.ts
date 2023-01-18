@@ -6,7 +6,12 @@ export default () => {
   router.post("/create", uploadFile.array("file"), ramController.createRam);
   router.get("/getAllRam", ramController.getAllRam);
   router.get("/getRamById/:id", ramController.getRamById);
-  router.delete("/delete/:id", ramController.deleteRam);
+  router.delete("/delete/:id/itemId", ramController.deleteRam);
   router.put("/update/:id", uploadFile.array("file"), ramController.updateRam);
+  router.post(
+    "/createWithExistPanel/:id",
+    uploadFile.array("file"),
+    ramController.createRamWithExistPanel
+  );
   return router;
 };

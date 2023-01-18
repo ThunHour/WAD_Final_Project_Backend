@@ -275,9 +275,6 @@ CREATE UNIQUE INDEX "PanelStorage_name_key" ON "PanelStorage"("name");
 CREATE UNIQUE INDEX "PanelRam_name_key" ON "PanelRam"("name");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "PanelCase_name_key" ON "PanelCase"("name");
-
--- CreateIndex
 CREATE UNIQUE INDEX "PanelMotherBoard_name_key" ON "PanelMotherBoard"("name");
 
 -- CreateIndex
@@ -374,7 +371,7 @@ ALTER TABLE "Ram" ADD CONSTRAINT "Ram_panelRamId_fkey" FOREIGN KEY ("panelRamId"
 ALTER TABLE "PanelCase" ADD CONSTRAINT "PanelCase_categoryId_fkey" FOREIGN KEY ("categoryId") REFERENCES "Category"("category_id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Case" ADD CONSTRAINT "Case_panelCaseId_fkey" FOREIGN KEY ("panelCaseId") REFERENCES "PanelCase"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "Case" ADD CONSTRAINT "Case_panelCaseId_fkey" FOREIGN KEY ("panelCaseId") REFERENCES "PanelCase"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "PanelMotherBoard" ADD CONSTRAINT "PanelMotherBoard_categoryId_fkey" FOREIGN KEY ("categoryId") REFERENCES "Category"("category_id") ON DELETE SET NULL ON UPDATE CASCADE;
@@ -398,7 +395,7 @@ ALTER TABLE "Color" ADD CONSTRAINT "Color_ramId_fkey" FOREIGN KEY ("ramId") REFE
 ALTER TABLE "Color" ADD CONSTRAINT "Color_storageId_fkey" FOREIGN KEY ("storageId") REFERENCES "Storage"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Color" ADD CONSTRAINT "Color_caseId_fkey" FOREIGN KEY ("caseId") REFERENCES "Case"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "Color" ADD CONSTRAINT "Color_caseId_fkey" FOREIGN KEY ("caseId") REFERENCES "Case"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Color" ADD CONSTRAINT "Color_motherBoardId_fkey" FOREIGN KEY ("motherBoardId") REFERENCES "MotherBoard"("id") ON DELETE SET NULL ON UPDATE CASCADE;
