@@ -1,67 +1,81 @@
-import { Color, PrismaClient, Image } from "@prisma/client";
+import { Color, PrismaClient, Image, Case, PanelCase } from "@prisma/client";
 const prisma = new PrismaClient();
 import { caseRequest } from "../../payload/request/case.Request";
 async function createCaseService(caseDto: caseRequest, img: Image[]) {
-  return await prisma.case.create({
+  const panel = await prisma.panelCase.create({
     data: {
-      model: caseDto.model,
-      price: Number(caseDto.price),
-      spec: caseDto.spec,
+      name: caseDto.model,
       categoryId: caseDto.categoryId,
-      color: {
+      case: {
         create: {
-          color: caseDto.color,
-          image: {
-            createMany: {
-              data: img.map((e, index) => {
-                return {
-                  imageUrl: e.imageUrl,
-                };
-              }),
+          model: caseDto.model,
+          price: Number(caseDto.price),
+          color: {
+            create: {
+              color: caseDto.color,
+              image: {
+                createMany: {
+                  data: img.map((e, index) => {
+                    return {
+                      imageUrl: e.imageUrl,
+                    };
+                  }),
+                },
+              },
             },
           },
         },
       },
     },
     include: {
-      category: {
+      Category: true,
+      case: {
         select: {
           id: true,
-          categoryName: true,
-        },
-      },
-      color: {
-        select: {
-          id: true,
-          color: true,
-          image: {
+          model: true,
+          price: true,
+          color: {
             select: {
               id: true,
-              imageUrl: true,
+              color: true,
+              image: {
+                select: {
+                  id: true,
+                  imageUrl: true,
+                },
+              },
             },
           },
         },
       },
     },
   });
+  return panel;
 }
 async function getAllCaseServie() {
-  return await prisma.case.findMany({
+  return await prisma.panelCase.findMany({
     include: {
-      category: {
+      Category: {
         select: {
           id: true,
           categoryName: true,
         },
       },
-      color: {
+      case: {
         select: {
           id: true,
-          color: true,
-          image: {
+          model: true,
+          price: true,
+          color: {
             select: {
               id: true,
-              imageUrl: true,
+              color: true,
+              image: {
+                select: {
+                  id: true,
+                  imageUrl: true,
+                },
+              },
             },
           },
         },
@@ -70,24 +84,31 @@ async function getAllCaseServie() {
   });
 }
 
-async function getCaseByIdService(id: string) {
-  return await prisma.case.findUnique({
+async function getPanelCaseByIdService(id: string) {
+  return await prisma.panelCase.findUnique({
     where: { id },
     include: {
-      category: {
+      Category: {
         select: {
           id: true,
           categoryName: true,
         },
       },
-      color: {
+      case: {
         select: {
           id: true,
-          color: true,
-          image: {
+          model: true,
+          price: true,
+          color: {
             select: {
               id: true,
-              imageUrl: true,
+              color: true,
+              image: {
+                select: {
+                  id: true,
+                  imageUrl: true,
+                },
+              },
             },
           },
         },
@@ -95,90 +116,257 @@ async function getCaseByIdService(id: string) {
     },
   });
 }
-async function deleteCaseService(id: string) {
-  return await prisma.case.delete({
-    where: { id },
-    include: {
-      category: {
-        select: {
-          id: true,
-          categoryName: true,
-        },
-      },
-      color: {
-        select: {
-          id: true,
-          color: true,
-          image: {
-            select: {
-              id: true,
-              imageUrl: true,
-            },
-          },
-        },
-      },
-    },
-  });
-}
-async function getCaseByName(name: string) {}
-async function updateCaseService(
-  id: string,
+async function createCaseWithExistPanelService(
+  pid: string,
   caseDto: caseRequest,
-  color: Color[],
   img: Image[]
 ) {
-  return await prisma.case.update({
-    where: { id },
+  return await prisma.panelCase.update({
+    where: { id: pid },
     data: {
-      model: caseDto.model,
-      price: caseDto.price,
-      spec: caseDto.spec,
-      color: {
-        update: color.map((c, index) => {
-          return {
-            where: { id: c.id },
-            data: {
-              color: c.color,
+      case: {
+        create: {
+          model: caseDto.model,
+          price: Number(caseDto.price),
+          color: {
+            create: {
+              color: caseDto.color,
               image: {
-                update: {
-                  where: { id: img[index].id },
-                  data: {
-                    imageUrl: img[index].imageUrl,
+                createMany: {
+                  data: img.map((e, index) => {
+                    return {
+                      imageUrl: e.imageUrl,
+                    };
+                  }),
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+    include: {
+      Category: {
+        select: {
+          id: true,
+          categoryName: true,
+        },
+      },
+      case: {
+        select: {
+          id: true,
+          model: true,
+          price: true,
+          color: {
+            select: {
+              id: true,
+              color: true,
+              image: {
+                select: {
+                  id: true,
+                  imageUrl: true,
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  });
+}
+async function getCaseByIdService(pid: string, itemId: string) {
+  return await prisma.panelCase.findUnique({
+    where: { id: pid },
+    include: {
+      Category: {
+        select: {
+          id: true,
+          categoryName: true,
+        },
+      },
+      case: {
+        where: { id: itemId },
+        select: {
+          id: true,
+          model: true,
+          price: true,
+          color: {
+            select: {
+              id: true,
+              color: true,
+              image: {
+                select: {
+                  id: true,
+                  imageUrl: true,
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  });
+}
+async function deleteCaseService(pid: string, itemId: string) {
+  const countCase = await prisma.case.count({ where: { panelCaseId: pid } });
+  if (countCase > 1) {
+    const panel = await getCaseByIdService(pid, itemId);
+    await prisma.case.delete({ where: { id: itemId } });
+    return panel;
+  } else {
+    return await prisma.panelCase.delete({
+      where: { id: pid },
+      include: {
+        Category: {
+          select: {
+            id: true,
+            categoryName: true,
+          },
+        },
+        case: {
+          select: {
+            id: true,
+            model: true,
+            price: true,
+            color: {
+              select: {
+                id: true,
+                color: true,
+                image: {
+                  select: {
+                    id: true,
+                    imageUrl: true,
                   },
                 },
               },
             },
-          };
-        }),
-      },
-    },
-    include: {
-      category: {
-        select: {
-          id: true,
-          categoryName: true,
+          },
         },
       },
-      color: {
-        select: {
-          id: true,
-          color: true,
-          image: {
-            select: {
-              id: true,
-              imageUrl: true,
+    });
+  }
+}
+async function getCaseByName(name: string) {}
+async function updateCaseService(
+  pid: string,
+  caseDto: PanelCase,
+  cases: any,
+  color: any,
+  img: Image[]
+) {
+  if (img.length == 0) {
+    return await prisma.panelCase.update({
+      where: { id: pid },
+      data: {
+        name: caseDto.name,
+        case: {
+          update: {
+            where: { id: cases.id },
+            data: {
+              model: cases.model,
+              price: Number(cases.price) as number,
+              color: {
+                update: {
+                  color: color.color,
+                },
+              },
             },
           },
         },
       },
-    },
-  });
+      include: {
+        Category: {
+          select: {
+            id: true,
+            categoryName: true,
+          },
+        },
+        case: {
+          select: {
+            id: true,
+            model: true,
+            price: true,
+            color: {
+              select: {
+                id: true,
+                color: true,
+                image: {
+                  select: {
+                    id: true,
+                    imageUrl: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    });
+  } else {
+    await prisma.image.deleteMany({ where: { colorId: color.id } });
+    return await prisma.panelCase.update({
+      where: { id: pid },
+      data: {
+        name: caseDto.name,
+        case: {
+          update: {
+            where: { id: cases.id },
+            data: {
+              model: cases.model,
+              price: Number(cases.price),
+              color: {
+                update: {
+                  color: color.color,
+                  image: {
+                    createMany: {
+                      data: img.map((c) => {
+                        return { imageUrl: c.imageUrl };
+                      }),
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+      include: {
+        Category: {
+          select: {
+            id: true,
+            categoryName: true,
+          },
+        },
+        case: {
+          select: {
+            id: true,
+            model: true,
+            price: true,
+            color: {
+              select: {
+                id: true,
+                color: true,
+                image: {
+                  select: {
+                    id: true,
+                    imageUrl: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    });
+  }
 }
 export default {
+  getPanelCaseByIdService,
   createCaseService,
   getAllCaseServie,
   getCaseByIdService,
   deleteCaseService,
   updateCaseService,
   getCaseByName,
+  createCaseWithExistPanelService,
 };

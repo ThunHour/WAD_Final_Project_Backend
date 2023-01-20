@@ -21,14 +21,40 @@ async function createCase(req: Request, res: Response, next: NextFunction) {
       return;
     }
     var up = await upload.uploadMulti(res, image, amount as number, "case");
-
     var cases = await caseService.createCaseService(caseDto, up);
     respone(res, cases, "Create case successfully", 201);
   } catch (error) {
     respone(res, null, `${error}`, 500);
   }
 }
-
+async function createCaseWithExistPanel(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  const { id } = req.params;
+  var image = req.files;
+  var caseDto = req.body as caseRequest;
+  const amount = image?.length;
+  if (
+    caseDto.categoryId == null ||
+    image == undefined ||
+    caseDto.model == null ||
+    caseDto.price == null ||
+    caseDto.spec == null ||
+    caseDto.color == null
+  ) {
+    respone(res, null, "bad request", 400);
+    return;
+  }
+  var up = await upload.uploadMulti(res, image, amount as number, "case");
+  var cases = await caseService.createCaseWithExistPanelService(
+    id,
+    caseDto,
+    up
+  );
+  respone(res, cases, "Create case successfully", 201);
+}
 async function getCaseById(req: Request, res: Response, next: NextFunction) {
   try {
     const { id } = req.params;
@@ -36,7 +62,7 @@ async function getCaseById(req: Request, res: Response, next: NextFunction) {
       respone(res, null, "Id must not null", 400);
       return;
     }
-    const cases = await caseService.getCaseByIdService(id);
+    const cases = await caseService.getPanelCaseByIdService(id);
 
     if (cases == null) {
       respone(res, null, "There are not case found", 404);
@@ -50,7 +76,7 @@ async function getCaseById(req: Request, res: Response, next: NextFunction) {
 async function getAllCase(req: Request, res: Response, next: NextFunction) {
   try {
     const cases = await caseService.getAllCaseServie();
-    if (cases == null) {
+    if (cases == null || cases.length == 0) {
       respone(res, null, "There are not case found", 404);
       return;
     }
@@ -61,12 +87,13 @@ async function getAllCase(req: Request, res: Response, next: NextFunction) {
 }
 async function deleteCase(req: Request, res: Response, next: NextFunction) {
   try {
-    const { id } = req.params;
-    if (id == null) {
+    const { id, itemId } = req.params;
+
+    if (id == null || itemId == null) {
       respone(res, null, "id must not null", 400);
       return;
     }
-    const cases = await caseService.deleteCaseService(id);
+    const cases = await caseService.deleteCaseService(id, itemId);
     if (cases == null) {
       respone(res, null, "There are not case found", 404);
       return;
@@ -94,11 +121,27 @@ async function updateCase(req: Request, res: Response, next: NextFunction) {
       respone(res, null, "bad request", 400);
       return;
     }
-    const checkCase = await caseService.getCaseByIdService(id);
-    if (checkCase == null) {
+    const checkPanelCase = await caseService.getCaseByIdService(
+      id,
+      caseDto.itemId
+    );
+    if (checkPanelCase == null) {
       respone(res, null, "There are not case found", 404);
       return;
     }
+
+    var up =
+      image == undefined || image.length == 0
+        ? []
+        : await upload.uploadMulti(res, image, amount as number, "case");
+    var updateCase = await caseService.updateCaseService(
+      id,
+      checkPanelCase,
+      checkPanelCase.case[0],
+      checkPanelCase.case[0].color,
+      up as Image[]
+    );
+    respone(res, updateCase, "update successful", 200);
   } catch (error) {
     respone(res, null, `${error}`, 500);
   }
@@ -109,4 +152,5 @@ export default {
   getAllCase,
   getCaseById,
   updateCase,
+  createCaseWithExistPanel,
 };

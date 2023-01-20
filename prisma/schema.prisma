@@ -124,7 +124,7 @@ model Storage {
 model PanelRam {
   id               String             @id @default(uuid())
   name             String             @unique
-  Ram              Ram[]
+  ram              Ram[]
   panelmotherBoard PanelMotherBoard[]
   Category         Category?          @relation(fields: [categoryId], references: [id])
   categoryId       String?
@@ -144,7 +144,7 @@ model Ram {
 
 model PanelCase {
   id               String             @id @default(uuid())
-  name             String             @unique
+  name             String
   case             Case[]
   panelmotherBoard PanelMotherBoard[]
   Category         Category?          @relation(fields: [categoryId], references: [id])
@@ -157,7 +157,7 @@ model Case {
   color       Color?
   price       Float
   customize   Customize[]
-  panelCase   PanelCase?  @relation(fields: [panelCaseId], references: [id])
+  panelCase   PanelCase?  @relation(fields: [panelCaseId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   panelCaseId String?
 }
 
@@ -202,7 +202,7 @@ model Color {
   ramId         String?      @unique
   Storage       Storage?     @relation(fields: [storageId], references: [id])
   storageId     String?      @unique
-  Case          Case?        @relation(fields: [caseId], references: [id])
+  Case          Case?        @relation(fields: [caseId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   caseId        String?      @unique
   MotherBoard   MotherBoard? @relation(fields: [motherBoardId], references: [id])
   motherBoardId String?      @unique
@@ -230,16 +230,16 @@ model Customize {
   storage       Storage?     @relation(fields: [storageId], references: [id])
   case          Case?        @relation(fields: [caseId], references: [id])
   motherBoard   MotherBoard? @relation(fields: [motherBoardId], references: [id])
+  user          User?         @relation(fields: [userId], references: [id])
   motherBoardId String?
-  user          User         @relation(fields: [userId], references: [id])
-  share         Boolean
+  share         Boolean @default(false)
   gpuId         String?
   powerSupplyId String?
   cpuId         String?
   ramId         String?
   storageId     String?
   caseId        String?
-  userId        String
+  userId        String?
 }
 
 model Partner {

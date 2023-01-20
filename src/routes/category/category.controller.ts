@@ -60,7 +60,7 @@ async function getCategoryById(
 async function getAllCategory(req: Request, res: Response, next: NextFunction) {
   try {
     const category = await categoryService.getAllCategoryServie();
-    if (category == null) {
+    if (category == null || category.length == 0) {
       respone(res, null, "There are not category found", 404);
       return;
     }
