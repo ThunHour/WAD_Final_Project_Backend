@@ -201,14 +201,14 @@ CREATE TABLE "Image" (
 CREATE TABLE "Customize" (
     "id" TEXT NOT NULL,
     "motherBoardId" TEXT,
-    "share" BOOLEAN NOT NULL,
+    "share" BOOLEAN NOT NULL DEFAULT false,
     "gpuId" TEXT,
     "powerSupplyId" TEXT,
     "cpuId" TEXT,
     "ramId" TEXT,
     "storageId" TEXT,
     "caseId" TEXT,
-    "userId" TEXT NOT NULL,
+    "userId" TEXT,
 
     CONSTRAINT "Customize_pkey" PRIMARY KEY ("id")
 );
@@ -434,7 +434,7 @@ ALTER TABLE "Customize" ADD CONSTRAINT "Customize_caseId_fkey" FOREIGN KEY ("cas
 ALTER TABLE "Customize" ADD CONSTRAINT "Customize_motherBoardId_fkey" FOREIGN KEY ("motherBoardId") REFERENCES "MotherBoard"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Customize" ADD CONSTRAINT "Customize_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Customize" ADD CONSTRAINT "Customize_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "_PanelCpuToPanelMotherBoard" ADD CONSTRAINT "_PanelCpuToPanelMotherBoard_A_fkey" FOREIGN KEY ("A") REFERENCES "PanelCpu"("id") ON DELETE CASCADE ON UPDATE CASCADE;

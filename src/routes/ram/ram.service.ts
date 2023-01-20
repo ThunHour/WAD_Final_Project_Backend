@@ -3,57 +3,179 @@ import { ramRequest } from "../../payload/request/ram.Resquest";
 const prisma = new PrismaClient();
 
 async function createRamService(ramDto: ramRequest, img: Image[]) {
-  const panel = await prisma.panelRam.create({
-    data: {
-      name: ramDto.model,
-      categoryId: ramDto.categoryId,
-      Ram: {
-        create: {
-          type: ramDto.type,
-          spec: ramDto.spec,
-          model: ramDto.model,
-          price: Number(ramDto.price),
-          color: {
-            create: {
-              color: ramDto.color,
-              image: {
-                createMany: {
-                  data: img.map((e) => {
-                    return {
-                      imageUrl: e.imageUrl,
-                    };
-                  }),
+  if (ramDto.listMotherBoardId.length == 0) {
+    return await prisma.panelRam.create({
+      data: {
+        name: ramDto.model,
+        categoryId: ramDto.categoryId,
+        ram: {
+          create: {
+            type: ramDto.type,
+            spec: ramDto.spec,
+            model: ramDto.model,
+            price: Number(ramDto.price),
+            color: {
+              create: {
+                color: ramDto.color,
+                image: {
+                  createMany: {
+                    data: img.map((e) => {
+                      return {
+                        imageUrl: e.imageUrl,
+                      };
+                    }),
+                  },
                 },
               },
             },
           },
         },
       },
-    },
-    include: {
-      Category: true,
-      Ram: {
-        select: {
-          id: true,
-          model: true,
-          price: true,
-          color: {
-            select: {
-              id: true,
-              color: true,
-              image: {
-                select: {
-                  id: true,
-                  imageUrl: true,
+      include: {
+        Category: true,
+        ram: {
+          select: {
+            id: true,
+            model: true,
+            price: true,
+            color: {
+              select: {
+                id: true,
+                color: true,
+                image: {
+                  select: {
+                    id: true,
+                    imageUrl: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+        panelmotherBoard: {
+          include: {
+            category: {
+              select: {
+                id: true,
+                categoryName: true,
+              },
+            },
+            motherBoard: {
+              select: {
+                id: true,
+                model: true,
+                price: true,
+                color: {
+                  select: {
+                    id: true,
+                    color: true,
+                    image: {
+                      select: {
+                        id: true,
+                        imageUrl: true,
+                      },
+                    },
+                  },
                 },
               },
             },
           },
         },
       },
-    },
-  });
-  return panel;
+    });
+  } else {
+    const motherBoard = await prisma.panelMotherBoard.findMany({
+      where: {
+        OR: ramDto.listMotherBoardId.map((r) => {
+          return {
+            id: r,
+          };
+        }),
+      },
+    });
+    return await prisma.panelRam.create({
+      data: {
+        name: ramDto.model,
+        categoryId: ramDto.categoryId,
+        ram: {
+          create: {
+            type: ramDto.type,
+            spec: ramDto.spec,
+            model: ramDto.model,
+            price: Number(ramDto.price),
+            color: {
+              create: {
+                color: ramDto.color,
+                image: {
+                  createMany: {
+                    data: img.map((e) => {
+                      return {
+                        imageUrl: e.imageUrl,
+                      };
+                    }),
+                  },
+                },
+              },
+            },
+          },
+        },
+        panelmotherBoard: {
+          create: motherBoard,
+        },
+      },
+      include: {
+        Category: true,
+        ram: {
+          select: {
+            id: true,
+            model: true,
+            price: true,
+            color: {
+              select: {
+                id: true,
+                color: true,
+                image: {
+                  select: {
+                    id: true,
+                    imageUrl: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+        panelmotherBoard: {
+          include: {
+            category: {
+              select: {
+                id: true,
+                categoryName: true,
+              },
+            },
+            motherBoard: {
+              select: {
+                id: true,
+                model: true,
+                price: true,
+                color: {
+                  select: {
+                    id: true,
+                    color: true,
+                    image: {
+                      select: {
+                        id: true,
+                        imageUrl: true,
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    });
+  }
 }
 async function getAllRamServie() {
   return await prisma.panelRam.findMany({
@@ -64,7 +186,7 @@ async function getAllRamServie() {
           categoryName: true,
         },
       },
-      Ram: {
+      ram: {
         select: {
           id: true,
           model: true,
@@ -77,6 +199,35 @@ async function getAllRamServie() {
                 select: {
                   id: true,
                   imageUrl: true,
+                },
+              },
+            },
+          },
+        },
+      },
+      panelmotherBoard: {
+        include: {
+          category: {
+            select: {
+              id: true,
+              categoryName: true,
+            },
+          },
+          motherBoard: {
+            select: {
+              id: true,
+              model: true,
+              price: true,
+              color: {
+                select: {
+                  id: true,
+                  color: true,
+                  image: {
+                    select: {
+                      id: true,
+                      imageUrl: true,
+                    },
+                  },
                 },
               },
             },
@@ -96,7 +247,7 @@ async function getRamByIdService(pid: string, itemId: string) {
           categoryName: true,
         },
       },
-      Ram: {
+      ram: {
         where: { id: itemId },
         select: {
           id: true,
@@ -116,6 +267,35 @@ async function getRamByIdService(pid: string, itemId: string) {
           },
         },
       },
+      panelmotherBoard: {
+        include: {
+          category: {
+            select: {
+              id: true,
+              categoryName: true,
+            },
+          },
+          motherBoard: {
+            select: {
+              id: true,
+              model: true,
+              price: true,
+              color: {
+                select: {
+                  id: true,
+                  color: true,
+                  image: {
+                    select: {
+                      id: true,
+                      imageUrl: true,
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
     },
   });
 }
@@ -129,7 +309,7 @@ async function getPanelRamByIdService(id: string) {
           categoryName: true,
         },
       },
-      Ram: {
+      ram: {
         select: {
           id: true,
           model: true,
@@ -142,6 +322,35 @@ async function getPanelRamByIdService(id: string) {
                 select: {
                   id: true,
                   imageUrl: true,
+                },
+              },
+            },
+          },
+        },
+      },
+      panelmotherBoard: {
+        include: {
+          category: {
+            select: {
+              id: true,
+              categoryName: true,
+            },
+          },
+          motherBoard: {
+            select: {
+              id: true,
+              model: true,
+              price: true,
+              color: {
+                select: {
+                  id: true,
+                  color: true,
+                  image: {
+                    select: {
+                      id: true,
+                      imageUrl: true,
+                    },
+                  },
                 },
               },
             },
@@ -167,7 +376,7 @@ async function deleteRamService(pid: string, itemId: string) {
             categoryName: true,
           },
         },
-        Ram: {
+        ram: {
           select: {
             id: true,
             model: true,
@@ -190,20 +399,30 @@ async function deleteRamService(pid: string, itemId: string) {
     });
   }
 }
-async function getRamByName(name: string) {}
+
 async function updateRamService(
   pid: string,
   ramDto: PanelRam,
   ram: any,
   color: any,
-  img: Image[]
+  img: Image[],
+  listMotherBoardId: string[]
 ) {
+  const motherBoard = await prisma.panelMotherBoard.findMany({
+    where: {
+      OR: listMotherBoardId.map((r) => {
+        return {
+          id: r,
+        };
+      }),
+    },
+  });
   if (img.length == 0) {
     return await prisma.panelRam.update({
       where: { id: pid },
       data: {
         name: ramDto.name,
-        Ram: {
+        ram: {
           update: {
             where: { id: ram.id },
             data: {
@@ -225,7 +444,7 @@ async function updateRamService(
             categoryName: true,
           },
         },
-        Ram: {
+        ram: {
           select: {
             id: true,
             model: true,
@@ -244,6 +463,35 @@ async function updateRamService(
             },
           },
         },
+        panelmotherBoard: {
+          include: {
+            category: {
+              select: {
+                id: true,
+                categoryName: true,
+              },
+            },
+            motherBoard: {
+              select: {
+                id: true,
+                model: true,
+                price: true,
+                color: {
+                  select: {
+                    id: true,
+                    color: true,
+                    image: {
+                      select: {
+                        id: true,
+                        imageUrl: true,
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
       },
     });
   } else {
@@ -252,7 +500,7 @@ async function updateRamService(
       where: { id: pid },
       data: {
         name: ramDto.name,
-        Ram: {
+        ram: {
           update: {
             where: { id: ram.id },
             data: {
@@ -281,7 +529,7 @@ async function updateRamService(
             categoryName: true,
           },
         },
-        Ram: {
+        ram: {
           select: {
             id: true,
             model: true,
@@ -300,28 +548,59 @@ async function updateRamService(
             },
           },
         },
+        panelmotherBoard: {
+          include: {
+            category: {
+              select: {
+                id: true,
+                categoryName: true,
+              },
+            },
+            motherBoard: {
+              select: {
+                id: true,
+                model: true,
+                price: true,
+                color: {
+                  select: {
+                    id: true,
+                    color: true,
+                    image: {
+                      select: {
+                        id: true,
+                        imageUrl: true,
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
       },
     });
   }
 }
 async function createRamWithExistPanelService(
   pid: string,
-  caseDto: ramRequest,
+  ramDto: ramRequest,
   img: Image[]
 ) {
-  return await prisma.panelCase.update({
+  return await prisma.panelRam.update({
     where: { id: pid },
     data: {
-      case: {
+      ram: {
         create: {
-          model: caseDto.model,
-          price: Number(caseDto.price),
+          spec: ramDto.spec,
+          type: ramDto.type,
+          model: ramDto.model,
+          price: Number(ramDto.price),
           color: {
             create: {
-              color: caseDto.color,
+              color: ramDto.color,
               image: {
                 createMany: {
-                  data: img.map((e, index) => {
+                  data: img.map((e) => {
                     return {
                       imageUrl: e.imageUrl,
                     };
@@ -340,7 +619,7 @@ async function createRamWithExistPanelService(
           categoryName: true,
         },
       },
-      case: {
+      ram: {
         select: {
           id: true,
           model: true,
@@ -368,7 +647,6 @@ export default {
   getRamByIdService,
   deleteRamService,
   updateRamService,
-  getRamByName,
   getPanelRamByIdService,
   createRamWithExistPanelService,
 };

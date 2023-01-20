@@ -89,7 +89,7 @@ async function deleteCase(req: Request, res: Response, next: NextFunction) {
   try {
     const { id, itemId } = req.params;
 
-    if (id == null) {
+    if (id == null || itemId == null) {
       respone(res, null, "id must not null", 400);
       return;
     }
