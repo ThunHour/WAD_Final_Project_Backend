@@ -60,7 +60,7 @@ async function getAllMotherBoardServie() {
       },
       panelcase: {
         include: {
-          Category: {
+          category: {
             select: {
               id: true,
               categoryName: true,
@@ -86,7 +86,7 @@ async function getAllMotherBoardServie() {
       },
       panelcpu: {
         include: {
-          Category: {
+          category: {
             select: {
               id: true,
               categoryName: true,
@@ -112,7 +112,7 @@ async function getAllMotherBoardServie() {
       },
       panelRam: {
         include: {
-          Category: {
+          category: {
             select: {
               id: true,
               categoryName: true,
@@ -138,7 +138,7 @@ async function getAllMotherBoardServie() {
       },
       panelstorage: {
         include: {
-          Category: {
+          category: {
             select: {
               id: true,
               categoryName: true,
@@ -194,7 +194,7 @@ async function getMotherBoardByIdService(id: string, itemId: string) {
       },
       panelcase: {
         include: {
-          Category: {
+          category: {
             select: {
               id: true,
               categoryName: true,
@@ -220,7 +220,7 @@ async function getMotherBoardByIdService(id: string, itemId: string) {
       },
       panelcpu: {
         include: {
-          Category: {
+          category: {
             select: {
               id: true,
               categoryName: true,
@@ -246,7 +246,7 @@ async function getMotherBoardByIdService(id: string, itemId: string) {
       },
       panelRam: {
         include: {
-          Category: {
+          category: {
             select: {
               id: true,
               categoryName: true,
@@ -272,7 +272,7 @@ async function getMotherBoardByIdService(id: string, itemId: string) {
       },
       panelstorage: {
         include: {
-          Category: {
+          category: {
             select: {
               id: true,
               categoryName: true,
@@ -372,7 +372,7 @@ async function deleteMotherBoardService(pid: string, itemId: string) {
     });
   }
 }
-async function getMotherBoardByName(name: string) {}
+
 async function updateMotherBoardService(
   pid: string,
   motherBoardDto: PanelMotherBoard,
@@ -380,84 +380,67 @@ async function updateMotherBoardService(
   color: any,
   img: Image[]
 ) {
-  if (img.length == 0) {
-    return await prisma.panelRam.update({
-      where: { id: pid },
-      data: {
-        name: motherBoardDto.name,
-        ram: {
-          update: {
-            where: { id: motherBoard.id },
-            data: {
-              model: motherBoard.model,
-              price: Number(motherBoard.price) as number,
-              color: {
-                update: {
-                  color: color.color,
-                },
-              },
-            },
-          },
-        },
-      },
-      include: {
-        Category: {
-          select: {
-            id: true,
-            categoryName: true,
-          },
-        },
-        ram: {
-          select: {
-            id: true,
-            model: true,
-            price: true,
-            color: {
-              select: {
-                id: true,
-                color: true,
-                image: {
-                  select: {
-                    id: true,
-                    imageUrl: true,
-                  },
-                },
-              },
-            },
-          },
-        },
-      },
-    });
-  } else {
-    await prisma.image.deleteMany({ where: { colorId: color.id } });
-    return await prisma.panelRam.update({
-      where: { id: pid },
-      data: {
-        name: motherBoardDto.name,
-        ram: {
-          update: {
-            where: { id: motherBoard.id },
-            data: {
-              model: motherBoard.model,
-              price: Number(motherBoard.price),
-              color: {
-                update: {
-                  color: color.color,
-                  image: {
-                    createMany: {
-                      data: img.map((c) => {
-                        return { imageUrl: c.imageUrl };
-                      }),
+  return await prisma.panelMotherBoard.update({
+    where: { id: pid },
+    data: {
+      name: motherBoardDto.name,
+      motherBoard: {
+        update: {
+          where: { id: motherBoard.id },
+          data: {
+            model: motherBoard.model,
+            price: Number(motherBoard.price) as number,
+            color:
+              img.length == 0
+                ? {
+                    update: {
+                      color: color.color,
+                    },
+                  }
+                : {
+                    update: {
+                      color: color.color,
+                      image: {
+                        createMany: {
+                          data: img.map((c) => {
+                            return { imageUrl: c.imageUrl };
+                          }),
+                        },
+                      },
                     },
                   },
+          },
+        },
+      },
+    },
+    include: {
+      category: {
+        select: {
+          id: true,
+          categoryName: true,
+        },
+      },
+      motherBoard: {
+        select: {
+          id: true,
+          model: true,
+          price: true,
+          color: {
+            select: {
+              id: true,
+              color: true,
+              image: {
+                select: {
+                  id: true,
+                  imageUrl: true,
                 },
               },
             },
           },
         },
       },
-    });
-  }
+    },
+  });
 }
 
 async function createMotherBoardWithExistPanelService(
@@ -515,13 +498,46 @@ async function createMotherBoardWithExistPanelService(
     },
   });
 }
+async function deletePanelMotherBoardService(id: string) {
+  return await prisma.panelMotherBoard.delete({
+    where: { id },
+    include: {
+      category: {
+        select: {
+          id: true,
+          categoryName: true,
+        },
+      },
+      motherBoard: {
+        select: {
+          id: true,
+          model: true,
+          price: true,
+          color: {
+            select: {
+              id: true,
+              color: true,
+              image: {
+                select: {
+                  id: true,
+                  imageUrl: true,
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  });
+}
+
 export default {
+  deletePanelMotherBoardService,
   createMotherBoardService,
   getAllMotherBoardServie,
   getMotherBoardByIdService,
   deleteMotherBoardService,
   updateMotherBoardService,
-  getMotherBoardByName,
   getPanelMotherBoardByIdService,
   createMotherBoardWithExistPanelService,
 };

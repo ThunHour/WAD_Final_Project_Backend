@@ -1,6 +1,5 @@
 import { Router } from "express";
 import customizeService from "./customize.controller";
-const uploadFile = require("multer")();
 export default () => {
   const router = Router();
   router.post("/create", customizeService.createCustomize);

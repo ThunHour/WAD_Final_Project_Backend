@@ -18,8 +18,9 @@ async function createMotherBoard(
       image == undefined ||
       image.length == 0 ||
       motherBoardDto.model == null ||
-      motherBoardDto.price == null ||
-      motherBoardDto.color == null
+      motherBoardDto.model == null ||
+      motherBoardDto.color == null ||
+      motherBoardDto.price == null
     ) {
       respone(res, null, "bad request", 400);
       return;
@@ -97,7 +98,7 @@ async function deleteMotherBoard(
       itemId
     );
     if (motherboard == null) {
-      respone(res, null, "There are not ram found", 404);
+      respone(res, null, "There are not motherboard found", 404);
       return;
     }
     respone(res, motherboard, "Delete motherboard Successfully", 200);
@@ -131,7 +132,7 @@ async function updateMotherBoard(
       motherBoardDto.itemId
     );
     if (checkMotherBoard == null) {
-      respone(res, null, "There are not ram found", 404);
+      respone(res, null, "There are not mother found", 404);
       return;
     }
 
@@ -191,7 +192,32 @@ async function createMotherBoardWithExistPanel(
   {
   }
 }
+async function deletePanelMotherBoard(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  try {
+    const { id } = req.params;
+
+    if (id == null) {
+      respone(res, null, "id must not null", 400);
+      return;
+    }
+    const motherboard = await motherBoardService.deletePanelMotherBoardService(
+      id
+    );
+    if (motherboard == null) {
+      respone(res, null, "There are not ram found", 404);
+      return;
+    }
+    respone(res, motherboard, "Delete motherboard Successfully", 200);
+  } catch (error) {
+    respone(res, null, `${error}`, 500);
+  }
+}
 export default {
+  deletePanelMotherBoard,
   createMotherBoard,
   deleteMotherBoard,
   getAllMotherBoard,

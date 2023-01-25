@@ -13,11 +13,20 @@ export default () => {
     "/getMotherBoardById/:id",
     motherBoardController.getMotherBoardById
   );
-  router.delete("/delete/:id", motherBoardController.deleteMotherBoard);
+  router.delete("/delete/:id/:itemId", motherBoardController.deleteMotherBoard);
   router.put(
     "/update/:id",
     uploadFile.array("file"),
     motherBoardController.updateMotherBoard
+  );
+  router.post(
+    "/createWithExistPanel/:id",
+    uploadFile.array("file"),
+    motherBoardController.createMotherBoardWithExistPanel
+  );
+  router.delete(
+    "/deletePanel/:id",
+    motherBoardController.deletePanelMotherBoard
   );
   return router;
 };
