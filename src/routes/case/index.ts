@@ -17,5 +17,6 @@ export default () => {
     uploadFile.array("file"),
     caseController.createCaseWithExistPanel
   );
+  router.delete("/deletePanel/:id", caseController.deletePanelRam);
   return router;
 };

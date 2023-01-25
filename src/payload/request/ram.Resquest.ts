@@ -6,5 +6,5 @@ export interface ramRequest {
   spec: string;
   price: number;
   type: string;
-  listMotherBoardId: string[];
+  listMotherBoardId: string;
 }

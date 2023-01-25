@@ -14,14 +14,14 @@ async function createCase(req: Request, res: Response, next: NextFunction) {
       image == undefined ||
       caseDto.model == null ||
       caseDto.price == null ||
-      caseDto.spec == null ||
       caseDto.color == null
     ) {
       respone(res, null, "bad request", 400);
       return;
     }
+    const list = caseDto.listMotherBoardId.split(",");
     var up = await upload.uploadMulti(res, image, amount as number, "case");
-    var cases = await caseService.createCaseService(caseDto, up);
+    var cases = await caseService.createCaseService(caseDto, up, list);
     respone(res, cases, "Create case successfully", 201);
   } catch (error) {
     respone(res, null, `${error}`, 500);
@@ -41,7 +41,6 @@ async function createCaseWithExistPanel(
     image == undefined ||
     caseDto.model == null ||
     caseDto.price == null ||
-    caseDto.spec == null ||
     caseDto.color == null
   ) {
     respone(res, null, "bad request", 400);
@@ -115,7 +114,6 @@ async function updateCase(req: Request, res: Response, next: NextFunction) {
       (image == undefined &&
         caseDto.model == null &&
         caseDto.price == null &&
-        caseDto.spec == null &&
         caseDto.color == null)
     ) {
       respone(res, null, "bad request", 400);
@@ -134,19 +132,45 @@ async function updateCase(req: Request, res: Response, next: NextFunction) {
       image == undefined || image.length == 0
         ? []
         : await upload.uploadMulti(res, image, amount as number, "case");
+    const listOfMotherBoardId =
+      caseDto.listMotherBoardId == undefined
+        ? []
+        : caseDto.listMotherBoardId == ""
+        ? []
+        : caseDto.listMotherBoardId.split(",");
     var updateCase = await caseService.updateCaseService(
       id,
       checkPanelCase,
       checkPanelCase.case[0],
       checkPanelCase.case[0].color,
-      up as Image[]
+      up as Image[],
+      listOfMotherBoardId
     );
     respone(res, updateCase, "update successful", 200);
   } catch (error) {
     respone(res, null, `${error}`, 500);
   }
 }
+async function deletePanelRam(req: Request, res: Response, next: NextFunction) {
+  try {
+    const { id } = req.params;
+
+    if (id == null) {
+      respone(res, null, "id must not null", 400);
+      return;
+    }
+    const cases = await caseService.deletePanelCaseService(id);
+    if (cases == null) {
+      respone(res, null, "There are not case found", 404);
+      return;
+    }
+    respone(res, cases, "Delete case Successfully", 200);
+  } catch (error) {
+    respone(res, null, `${error}`, 500);
+  }
+}
 export default {
+  deletePanelRam,
   createCase,
   deleteCase,
   getAllCase,

@@ -3,6 +3,6 @@ export interface caseRequest {
   itemId: string;
   model: string;
   color: string;
-  spec: string;
   price: number;
+  listMotherBoardId: string;
 }
