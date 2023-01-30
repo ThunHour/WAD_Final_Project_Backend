@@ -1,82 +1,93 @@
-import {
-  PrismaClient,
-  Storage,
-  Color,
-  Image,
-  MotherBoard,
-} from "@prisma/client";
+import { PrismaClient, Image } from "@prisma/client";
 const prisma = new PrismaClient();
 
-async function createStorageService(
-  storage: Storage,
-  color: Color[],
-  motherBoard: MotherBoard[],
-  img: any
-) {
-  return prisma.storage.create({
+async function createStorageService(storage: Storage, img: Image[]) {
+  const panel = prisma.PanelStorage.create({
     data: {
-      model: storage.model,
-      spec: storage.spec,
-      price: storage.price,
+      name: storage.name,
       categoryId: storage.categoryId,
-      color: {
-        create: color.map((c, index) => {
-          return {
-            color: c.color,
-            image: {
-              create: {
-                imageUrl: img[index],
+      storage: {
+        create: {
+          model: storage.model,
+          spec: storage.spec,
+          price: storage.price,
+          color: {
+            create: {
+              color: storage.color,
+              image: {
+                createMany: {
+                  data: img.map((e) => {
+                    return {
+                      imageUrl: e.imageUrl,
+                    };
+                  }),
+                },
               },
             },
+          },
+        },
+      },
+      panelmotherBoard: {
+        connect: list.map((e) => {
+          return {
+            id: e,
           };
         }),
       },
-      //   motherBoard: {
-      //     create: motherBoard.map((c, index) => {
-      //         return {
-      //           motherboard: c.id,
-      //           image: {
-      //             create: {
-      //               imageUrl: img[index],
-      //             },
-      //           },
-      //         };
-      //       }),
-      //   },
-      //   customize: {
-      //     create: color.map((c, index) => {
-      //         return {
-      //           color: c.color,
-      //           image: {
-      //             create: {
-      //               imageUrl: img[index],
-      //             },
-      //           },
-      //         };
-      //       }),
-      //   }
     },
     include: {
-      category: {
+      category: true,
+      storage: {
         select: {
           id: true,
-          categoryName: true,
-        },
-      },
-      color: {
-        select: {
-          id: true,
-          color: true,
-          image: {
+          model: true,
+          price: true,
+          color: {
             select: {
               id: true,
-              imageUrl: true,
+              color: true,
+              image: {
+                select: {
+                  id: true,
+                  imageUrl: true,
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+    panelmotherBoard: {
+      include: {
+        category: {
+          select: {
+            id: true,
+            categoryName: true,
+          },
+        },
+        motherBoard: {
+          select: {
+            id: true,
+            model: true,
+            price: true,
+            color: {
+              select: {
+                id: true,
+                color: true,
+                image: {
+                  select: {
+                    id: true,
+                    imageUrl: true,
+                  },
+                },
+              },
             },
           },
         },
       },
     },
   });
+  return panel;
 }
 
 async function getAllStorageServie() {
@@ -88,14 +99,53 @@ async function getAllStorageServie() {
           categoryName: true,
         },
       },
-      color: {
+      storage: {
         select: {
           id: true,
-          color: true,
-          image: {
+          model: true,
+          price: true,
+          color: {
             select: {
               id: true,
-              imageUrl: true,
+              color: true,
+              image: {
+                select: {
+                  id: true,
+                  imageUrl: true,
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  });
+}
+async function getPanelStorageByIdService(id: string) {
+  return await prisma.panelStorage.findUnique({
+    where: { id },
+    include: {
+      category: {
+        select: {
+          id: true,
+          categoryName: true,
+        },
+      },
+      storage: {
+        select: {
+          id: true,
+          model: true,
+          price: true,
+          color: {
+            select: {
+              id: true,
+              color: true,
+              image: {
+                select: {
+                  id: true,
+                  imageUrl: true,
+                },
+              },
             },
           },
         },
@@ -104,8 +154,67 @@ async function getAllStorageServie() {
   });
 }
 
-async function getStorageByIdService(id: string) {
-  return await prisma.storage.findUnique({
+async function createCaseWithExistPanelService(
+  pid: string,
+  storage: Storage,
+  img: Image[]
+) {
+  return await prisma.panelStorage.update({
+    where: { id: pid },
+    data: {
+      storage: {
+        create: {
+          model: storage.model,
+          price: Number(storage.price),
+          color: {
+            create: {
+              color: storage.color,
+              image: {
+                createMany: {
+                  data: img.map((e, index) => {
+                    return {
+                      imageUrl: e.imageUrl,
+                    };
+                  }),
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+    include: {
+      category: {
+        select: {
+          id: true,
+          categoryName: true,
+        },
+      },
+      storage: {
+        select: {
+          id: true,
+          model: true,
+          price: true,
+          color: {
+            select: {
+              id: true,
+              color: true,
+              image: {
+                select: {
+                  id: true,
+                  imageUrl: true,
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  });
+}
+
+async function getStorageByIdService(id: string, itemId: string) {
+  return await prisma.panelStorage.findUnique({
     where: {
       id,
     },
@@ -116,14 +225,22 @@ async function getStorageByIdService(id: string) {
           categoryName: true,
         },
       },
-      color: {
+      storage: {
+        where: { id: itemId },
         select: {
           id: true,
-          color: true,
-          image: {
+          model: true,
+          price: true,
+          color: {
             select: {
               id: true,
-              imageUrl: true,
+              color: true,
+              image: {
+                select: {
+                  id: true,
+                  imageUrl: true,
+                },
+              },
             },
           },
         },
@@ -132,30 +249,46 @@ async function getStorageByIdService(id: string) {
   });
 }
 
-async function deleteStorageService(id: string) {
-  return await prisma.storage.delete({
-    where: { id },
-    include: {
-      category: {
-        select: {
-          id: true,
-          categoryName: true,
+async function deleteStorageService(id: string, itemId: string) {
+  const countStorage = await prisma.storage.count({
+    where: { panelStorageId: id },
+  });
+  if (countStorage > 1) {
+    const panel = await getStorageByIdService(id, itemId);
+    await prisma.storage.delete({ where: { id: itemId } });
+    return panel;
+  } else {
+    return await prisma.panelStorage.delete({
+      where: { id },
+      include: {
+        category: {
+          select: {
+            id: true,
+            categoryName: true,
+          },
         },
-      },
-      color: {
-        select: {
-          id: true,
-          color: true,
-          image: {
-            select: {
-              id: true,
-              imageUrl: true,
+        storage: {
+          select: {
+            id: true,
+            model: true,
+            price: true,
+            color: {
+              select: {
+                id: true,
+                color: true,
+                image: {
+                  select: {
+                    id: true,
+                    imageUrl: true,
+                  },
+                },
+              },
             },
           },
         },
       },
-    },
-  });
+    });
+  }
 }
 
 async function getStorageByName(name: string) {}
@@ -221,4 +354,5 @@ export default {
   deleteStorageService,
   updateStorageService,
   getStorageByName,
+  getPanelStorageByIdService,
 };
