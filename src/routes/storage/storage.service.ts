@@ -1,8 +1,12 @@
 import { PrismaClient, Image } from "@prisma/client";
 const prisma = new PrismaClient();
 
-async function createStorageService(storage: Storage, img: Image[]) {
-  const panel = prisma.PanelStorage.create({
+async function createStorageService(
+  storage: Storage,
+  img: Image[],
+  list: string[]
+) {
+  const panel = prisma.panelStorage.create({
     data: {
       name: storage.name,
       categoryId: storage.categoryId,
@@ -56,28 +60,28 @@ async function createStorageService(storage: Storage, img: Image[]) {
           },
         },
       },
-    },
-    panelmotherBoard: {
-      include: {
-        category: {
-          select: {
-            id: true,
-            categoryName: true,
+      panelmotherBoard: {
+        include: {
+          category: {
+            select: {
+              id: true,
+              categoryName: true,
+            },
           },
-        },
-        motherBoard: {
-          select: {
-            id: true,
-            model: true,
-            price: true,
-            color: {
-              select: {
-                id: true,
-                color: true,
-                image: {
-                  select: {
-                    id: true,
-                    imageUrl: true,
+          motherBoard: {
+            select: {
+              id: true,
+              model: true,
+              price: true,
+              color: {
+                select: {
+                  id: true,
+                  color: true,
+                  image: {
+                    select: {
+                      id: true,
+                      imageUrl: true,
+                    },
                   },
                 },
               },
@@ -91,7 +95,7 @@ async function createStorageService(storage: Storage, img: Image[]) {
 }
 
 async function getAllStorageServie() {
-  return await prisma.storage.findMany({
+  return await prisma.panelStorage.findMany({
     include: {
       category: {
         select: {
@@ -154,7 +158,7 @@ async function getPanelStorageByIdService(id: string) {
   });
 }
 
-async function createCaseWithExistPanelService(
+async function createStorageWithExistPanelService(
   pid: string,
   storage: Storage,
   img: Image[]
@@ -166,6 +170,7 @@ async function createCaseWithExistPanelService(
         create: {
           model: storage.model,
           price: Number(storage.price),
+          spec: storage.spec,
           color: {
             create: {
               color: storage.color,
