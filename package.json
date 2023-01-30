@@ -9,7 +9,7 @@
     "build": "rimraf ./build && tsc",
     "start": "pnpm run build && pnpm build/index.ts",
     "migrate": "rimraf ./prisma/migrations && prisma migrate dev --create-only && pnpm prisma migrate dev && prisma db seed",
-    "prisma-studio": "npx prisma studio",
+    "prisma-studio": "npx prisma studio -p 1212",
     "prisma-client": "prisma generate",
     "prepare": "husky install"
   },

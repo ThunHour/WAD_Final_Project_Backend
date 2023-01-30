@@ -162,8 +162,8 @@ model Case {
 }
 
 model PanelMotherBoard {
-  id           String         @id @default(uuid())
-  name         String         @unique
+  id           String         @id @default(uuid()) @unique
+  name         String         
   motherBoard  MotherBoard[]
   panelcpu     PanelCpu[]
   panelRam     PanelRam[]
@@ -171,15 +171,17 @@ model PanelMotherBoard {
   panelcase    PanelCase[] 
   category     Category?      @relation(fields: [categoryId], references: [id])
   categoryId   String?
+
+  @@unique([id, name])
 }
 
 model MotherBoard {
-  id                 String            @id @default(uuid())
-  model              String
+  id                 String            @id @default(uuid()) @unique
+  model              String 
   price              Float
   color              Color?
   customize          Customize[]
-  panelMotherBoard   PanelMotherBoard? @relation(fields: [panelMotherBoardId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  panelMotherBoard   PanelMotherBoard? @relation(fields: [panelMotherBoardId,model], references: [id,name], onDelete: Cascade, onUpdate: Cascade)
   panelMotherBoardId String?
 }
 
