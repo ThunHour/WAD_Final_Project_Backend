@@ -151,7 +151,11 @@ async function updateCase(req: Request, res: Response, next: NextFunction) {
     respone(res, null, `${error}`, 500);
   }
 }
-async function deletePanelRam(req: Request, res: Response, next: NextFunction) {
+async function deletePanelCase(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
   try {
     const { id } = req.params;
 
@@ -170,7 +174,7 @@ async function deletePanelRam(req: Request, res: Response, next: NextFunction) {
   }
 }
 export default {
-  deletePanelRam,
+  deletePanelCase,
   createCase,
   deleteCase,
   getAllCase,

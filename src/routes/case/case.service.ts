@@ -295,7 +295,7 @@ async function updateCaseService(
   img: Image[],
   listMotherBoardId: string[]
 ) {
-  const listPanelRamId = await prisma.panelRam.findFirst({
+  const listPanelCaseId = await prisma.panelCase.findFirst({
     where: { id: pid },
     select: {
       panelmotherBoard: {
@@ -305,7 +305,7 @@ async function updateCaseService(
       },
     },
   });
-  var dicon = listPanelRamId?.panelmotherBoard
+  var dicon = listPanelCaseId?.panelmotherBoard
     .map((e) => {
       return e.id;
     })
@@ -422,7 +422,7 @@ async function updateCaseService(
   });
 }
 async function deletePanelCaseService(id: string) {
-  const listPanelRamId = await prisma.panelCase.findUnique({
+  const listPanelCaseId = await prisma.panelCase.findUnique({
     where: { id },
     select: {
       panelmotherBoard: {
@@ -436,7 +436,7 @@ async function deletePanelCaseService(id: string) {
     where: { id },
     data: {
       panelmotherBoard: {
-        disconnect: listPanelRamId?.panelmotherBoard.map((e) => {
+        disconnect: listPanelCaseId?.panelmotherBoard.map((e) => {
           return e;
         }),
       },
