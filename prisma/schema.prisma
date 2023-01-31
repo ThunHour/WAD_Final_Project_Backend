@@ -46,7 +46,7 @@ model PanelGpu {
   id         String    @id @default(uuid())
   name       String    @unique
   gpu        Gpu[]
-  Category   Category? @relation(fields: [categoryId], references: [id])
+  category   Category? @relation(fields: [categoryId], references: [id])
   categoryId String?
 }
 
@@ -55,7 +55,7 @@ model Gpu {
   model      String
   spec       String
   price      Float
-  color      Color[]
+  color      Color?
   customize  Customize[]
   panelGpu   PanelGpu?   @relation(fields: [paneGpulId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   paneGpulId String?
