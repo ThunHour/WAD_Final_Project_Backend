@@ -6,6 +6,7 @@ import category from "./category/index";
 import cases from "./case/index";
 import ram from "./ram/index";
 import motherBoard from "./motherBoard/index";
+import cpu from "./cpu/index";
 export default (app: Application) => {
   const route = Router();
   route.use("/auth", auth());
@@ -15,6 +16,7 @@ export default (app: Application) => {
   route.use("/case", cases());
   route.use("/ram", ram());
   route.use("/motherBoard", motherBoard());
+  route.use("/cpu", cpu());
   app.use("/", route);
   return app;
 };
