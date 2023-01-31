@@ -192,7 +192,6 @@ CREATE TABLE "Image" (
     "categooryId" TEXT,
     "colorId" TEXT,
     "brandId" TEXT,
-    "partnerId" TEXT,
 
     CONSTRAINT "Image_pkey" PRIMARY KEY ("id")
 );
@@ -211,16 +210,6 @@ CREATE TABLE "Customize" (
     "userId" TEXT,
 
     CONSTRAINT "Customize_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
-CREATE TABLE "Partner" (
-    "id" TEXT NOT NULL,
-    "storeName" TEXT NOT NULL,
-    "location" TEXT NOT NULL,
-    "webUrl" TEXT NOT NULL,
-
-    CONSTRAINT "Partner_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -309,12 +298,6 @@ CREATE UNIQUE INDEX "Image_categooryId_key" ON "Image"("categooryId");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Image_brandId_key" ON "Image"("brandId");
-
--- CreateIndex
-CREATE UNIQUE INDEX "Image_partnerId_key" ON "Image"("partnerId");
-
--- CreateIndex
-CREATE UNIQUE INDEX "Partner_storeName_key" ON "Partner"("storeName");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "_PanelCpuToPanelMotherBoard_AB_unique" ON "_PanelCpuToPanelMotherBoard"("A", "B");
@@ -414,9 +397,6 @@ ALTER TABLE "Image" ADD CONSTRAINT "Image_brandId_fkey" FOREIGN KEY ("brandId") 
 
 -- AddForeignKey
 ALTER TABLE "Image" ADD CONSTRAINT "Image_categooryId_fkey" FOREIGN KEY ("categooryId") REFERENCES "Category"("category_id") ON DELETE SET NULL ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "Image" ADD CONSTRAINT "Image_partnerId_fkey" FOREIGN KEY ("partnerId") REFERENCES "Partner"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Customize" ADD CONSTRAINT "Customize_gpuId_fkey" FOREIGN KEY ("gpuId") REFERENCES "Gpu"("id") ON DELETE SET NULL ON UPDATE CASCADE;

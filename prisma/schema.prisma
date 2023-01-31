@@ -46,7 +46,7 @@ model PanelGpu {
   id         String    @id @default(uuid())
   name       String    @unique
   gpu        Gpu[]
-  Category   Category? @relation(fields: [categoryId], references: [id])
+  category   Category? @relation(fields: [categoryId], references: [id])
   categoryId String?
 }
 
@@ -55,7 +55,7 @@ model Gpu {
   model      String
   spec       String
   price      Float
-  color      Color[]
+  color      Color?
   customize  Customize[]
   panelGpu   PanelGpu?   @relation(fields: [paneGpulId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   paneGpulId String?
@@ -219,8 +219,6 @@ model Image {
   categooryId String?   @unique
   colorId     String?
   brandId     String?   @unique
-  partner     Partner?  @relation(fields: [partnerId], references: [id])
-  partnerId   String?   @unique
 }
 
 model Customize {
@@ -244,10 +242,4 @@ model Customize {
   userId        String?
 }
 
-model Partner {
-  id        String @id @default(uuid())
-  storeName String @unique
-  location  String
-  webUrl    String
-  logo      Image?
-}
+

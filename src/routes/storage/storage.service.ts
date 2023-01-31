@@ -1,16 +1,21 @@
-import { PrismaClient, Image } from "@prisma/client";
+import { PrismaClient, Image, PanelStorage } from "@prisma/client";
 const prisma = new PrismaClient();
+import { storageRequest } from "../../payload/request/storage.Request";
 
-async function createStorageService(storage: Storage, img: Image[]) {
-  const panel = prisma.PanelStorage.create({
+async function createStorageService(
+  storage: storageRequest,
+  img: Image[],
+  list: string[]
+) {
+  const panel = prisma.panelStorage.create({
     data: {
-      name: storage.name,
+      name: storage.model,
       categoryId: storage.categoryId,
       storage: {
         create: {
           model: storage.model,
           spec: storage.spec,
-          price: storage.price,
+          price: Number(storage.price),
           color: {
             create: {
               color: storage.color,
@@ -56,28 +61,28 @@ async function createStorageService(storage: Storage, img: Image[]) {
           },
         },
       },
-    },
-    panelmotherBoard: {
-      include: {
-        category: {
-          select: {
-            id: true,
-            categoryName: true,
+      panelmotherBoard: {
+        include: {
+          category: {
+            select: {
+              id: true,
+              categoryName: true,
+            },
           },
-        },
-        motherBoard: {
-          select: {
-            id: true,
-            model: true,
-            price: true,
-            color: {
-              select: {
-                id: true,
-                color: true,
-                image: {
-                  select: {
-                    id: true,
-                    imageUrl: true,
+          motherBoard: {
+            select: {
+              id: true,
+              model: true,
+              price: true,
+              color: {
+                select: {
+                  id: true,
+                  color: true,
+                  image: {
+                    select: {
+                      id: true,
+                      imageUrl: true,
+                    },
                   },
                 },
               },
@@ -91,7 +96,7 @@ async function createStorageService(storage: Storage, img: Image[]) {
 }
 
 async function getAllStorageServie() {
-  return await prisma.storage.findMany({
+  return await prisma.panelStorage.findMany({
     include: {
       category: {
         select: {
@@ -154,9 +159,9 @@ async function getPanelStorageByIdService(id: string) {
   });
 }
 
-async function createCaseWithExistPanelService(
+async function createStorageWithExistPanelService(
   pid: string,
-  storage: Storage,
+  storage: storageRequest,
   img: Image[]
 ) {
   return await prisma.panelStorage.update({
@@ -166,6 +171,7 @@ async function createCaseWithExistPanelService(
         create: {
           model: storage.model,
           price: Number(storage.price),
+          spec: storage.spec,
           color: {
             create: {
               color: storage.color,
@@ -291,36 +297,79 @@ async function deleteStorageService(id: string, itemId: string) {
   }
 }
 
-async function getStorageByName(name: string) {}
-
 async function updateStorageService(
   id: string,
-  storage: Storage,
-  color: Color[],
-  img: Image[]
+  storage: PanelStorage,
+  storages: any,
+  color: any,
+  img: Image[],
+  listMotherBoardId: string[]
 ) {
-  return await prisma.storage.update({
+  const listPanelStorageId = await prisma.panelStorage.findFirst({
+    where: { id: id },
+    select: {
+      panelmotherBoard: {
+        select: {
+          id: true,
+        },
+      },
+    },
+  });
+  var dicon = listPanelStorageId?.panelmotherBoard
+    .map((e) => {
+      return e.id;
+    })
+    .map((e) => {
+      if (!listMotherBoardId.includes(e)) {
+        return e;
+      }
+    });
+
+  return await prisma.panelStorage.update({
     where: { id },
     data: {
-      model: storage.model,
-      spec: storage.spec,
-      price: storage.price,
-      categoryId: storage.categoryId,
-      color: {
-        update: color.map((c, index) => {
-          return {
-            where: { id: c.id },
-            data: {
-              color: c.color,
-              image: {
-                update: {
-                  where: { id: img[index].id },
-                  data: {
-                    imageUrl: img[index].imageUrl,
+      name: storage.name,
+      storage: {
+        update: {
+          where: { id: storages.id },
+          data: {
+            model: storages.model,
+            price: Number(storages.price) as number,
+            spec: storages.spec,
+            color:
+              img.length == 0
+                ? {
+                    update: {
+                      color: color.color,
+                      image: {
+                        createMany: {
+                          data: img.map((c) => {
+                            return { imageUrl: c.imageUrl };
+                          }),
+                        },
+                      },
+                    },
+                  }
+                : {
+                    update: {
+                      color: color.color,
+                    },
                   },
-                },
-              },
-            },
+          },
+        },
+      },
+      panelmotherBoard: {
+        connect:
+          listMotherBoardId.length == 0
+            ? []
+            : listMotherBoardId.map((e) => {
+                return {
+                  id: e,
+                };
+              }),
+        disconnect: dicon?.map((d) => {
+          return {
+            id: d,
           };
         }),
       },
@@ -332,19 +381,82 @@ async function updateStorageService(
           categoryName: true,
         },
       },
-      color: {
+      storage: {
         select: {
           id: true,
-          color: true,
-          image: {
+          model: true,
+          price: true,
+          spec: true,
+          color: {
             select: {
               id: true,
-              imageUrl: true,
+              color: true,
+              image: {
+                select: {
+                  id: true,
+                  imageUrl: true,
+                },
+              },
+            },
+          },
+        },
+      },
+      panelmotherBoard: {
+        include: {
+          category: {
+            select: {
+              id: true,
+              categoryName: true,
+            },
+          },
+          motherBoard: {
+            select: {
+              id: true,
+              model: true,
+              price: true,
+              color: {
+                select: {
+                  id: true,
+                  color: true,
+                  image: {
+                    select: {
+                      id: true,
+                      imageUrl: true,
+                    },
+                  },
+                },
+              },
             },
           },
         },
       },
     },
+  });
+}
+
+async function deletePanelStorageService(id: string) {
+  const listPanelStorageId = await prisma.panelStorage.findUnique({
+    where: { id },
+    select: {
+      panelmotherBoard: {
+        select: {
+          id: true,
+        },
+      },
+    },
+  });
+  await prisma.panelStorage.update({
+    where: { id },
+    data: {
+      panelmotherBoard: {
+        disconnect: listPanelStorageId?.panelmotherBoard.map((e) => {
+          return e;
+        }),
+      },
+    },
+  });
+  return await prisma.panelStorage.delete({
+    where: { id: id },
   });
 }
 export default {
@@ -353,6 +465,7 @@ export default {
   getStorageByIdService,
   deleteStorageService,
   updateStorageService,
-  getStorageByName,
+  deletePanelStorageService,
+  createStorageWithExistPanelService,
   getPanelStorageByIdService,
 };

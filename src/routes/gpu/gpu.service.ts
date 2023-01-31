@@ -1,22 +1,26 @@
-import { Color, PrismaClient, Image, Case, PanelCase } from "@prisma/client";
+import {
+  PrismaClient,
+  Image,
+  PanelStorage,
+  PanelGpu,
+  Gpu,
+} from "@prisma/client";
 const prisma = new PrismaClient();
-import { caseRequest } from "../../payload/request/case.Request";
-async function createCaseService(
-  caseDto: caseRequest,
-  img: Image[],
-  list: string[]
-) {
-  const panel = await prisma.panelCase.create({
+import { gpuRequest } from "../../payload/request/gpu.Request";
+
+async function createGpuService(gpu: gpuRequest, img: Image[]) {
+  const panel = prisma.panelGpu.create({
     data: {
-      name: caseDto.model,
-      categoryId: caseDto.categoryId,
-      case: {
+      name: gpu.model,
+      categoryId: gpu.categoryId,
+      gpu: {
         create: {
-          model: caseDto.model,
-          price: Number(caseDto.price),
+          model: gpu.model,
+          spec: gpu.spec,
+          price: Number(gpu.price),
           color: {
             create: {
-              color: caseDto.color,
+              color: gpu.color,
               image: {
                 createMany: {
                   data: img.map((e) => {
@@ -30,17 +34,10 @@ async function createCaseService(
           },
         },
       },
-      panelmotherBoard: {
-        connect: list.map((e) => {
-          return {
-            id: e,
-          };
-        }),
-      },
     },
     include: {
       category: true,
-      case: {
+      gpu: {
         select: {
           id: true,
           model: true,
@@ -59,29 +56,33 @@ async function createCaseService(
           },
         },
       },
-      panelmotherBoard: {
-        include: {
-          category: {
+    },
+  });
+  return panel;
+}
+
+async function getAllGpuServie() {
+  return await prisma.panelGpu.findMany({
+    include: {
+      category: {
+        select: {
+          id: true,
+          categoryName: true,
+        },
+      },
+      gpu: {
+        select: {
+          id: true,
+          model: true,
+          price: true,
+          color: {
             select: {
               id: true,
-              categoryName: true,
-            },
-          },
-          motherBoard: {
-            select: {
-              id: true,
-              model: true,
-              price: true,
-              color: {
+              color: true,
+              image: {
                 select: {
                   id: true,
-                  color: true,
-                  image: {
-                    select: {
-                      id: true,
-                      imageUrl: true,
-                    },
-                  },
+                  imageUrl: true,
                 },
               },
             },
@@ -90,10 +91,10 @@ async function createCaseService(
       },
     },
   });
-  return panel;
 }
-async function getAllCaseServie() {
-  return await prisma.panelCase.findMany({
+async function getPanelGpuByIdService(id: string) {
+  return await prisma.panelGpu.findUnique({
+    where: { id },
     include: {
       category: {
         select: {
@@ -101,7 +102,7 @@ async function getAllCaseServie() {
           categoryName: true,
         },
       },
-      case: {
+      gpu: {
         select: {
           id: true,
           model: true,
@@ -124,53 +125,22 @@ async function getAllCaseServie() {
   });
 }
 
-async function getPanelCaseByIdService(id: string) {
-  return await prisma.panelCase.findUnique({
-    where: { id },
-    include: {
-      category: {
-        select: {
-          id: true,
-          categoryName: true,
-        },
-      },
-      case: {
-        select: {
-          id: true,
-          model: true,
-          price: true,
-          color: {
-            select: {
-              id: true,
-              color: true,
-              image: {
-                select: {
-                  id: true,
-                  imageUrl: true,
-                },
-              },
-            },
-          },
-        },
-      },
-    },
-  });
-}
-async function createCaseWithExistPanelService(
+async function createGpuWithExistPanelService(
   pid: string,
-  caseDto: caseRequest,
+  gpu: gpuRequest,
   img: Image[]
 ) {
-  return await prisma.panelCase.update({
+  return await prisma.panelGpu.update({
     where: { id: pid },
     data: {
-      case: {
+      gpu: {
         create: {
-          model: caseDto.model,
-          price: Number(caseDto.price),
+          model: gpu.model,
+          price: Number(gpu.price),
+          spec: gpu.spec,
           color: {
             create: {
-              color: caseDto.color,
+              color: gpu.color,
               image: {
                 createMany: {
                   data: img.map((e, index) => {
@@ -192,7 +162,7 @@ async function createCaseWithExistPanelService(
           categoryName: true,
         },
       },
-      case: {
+      gpu: {
         select: {
           id: true,
           model: true,
@@ -214,9 +184,12 @@ async function createCaseWithExistPanelService(
     },
   });
 }
-async function getCaseByIdService(pid: string, itemId: string) {
-  return await prisma.panelCase.findUnique({
-    where: { id: pid },
+
+async function getGpuByIdService(id: string, itemId: string) {
+  return await prisma.panelGpu.findUnique({
+    where: {
+      id,
+    },
     include: {
       category: {
         select: {
@@ -224,7 +197,7 @@ async function getCaseByIdService(pid: string, itemId: string) {
           categoryName: true,
         },
       },
-      case: {
+      gpu: {
         where: { id: itemId },
         select: {
           id: true,
@@ -247,15 +220,18 @@ async function getCaseByIdService(pid: string, itemId: string) {
     },
   });
 }
-async function deleteCaseService(pid: string, itemId: string) {
-  const countCase = await prisma.case.count({ where: { panelCaseId: pid } });
-  if (countCase > 1) {
-    const panel = await getCaseByIdService(pid, itemId);
-    await prisma.case.delete({ where: { id: itemId } });
+
+async function deleteGpuService(id: string, itemId: string) {
+  const countGpu = await prisma.gpu.count({
+    where: { paneGpulId: id },
+  });
+  if (countGpu > 1) {
+    const panel = await getGpuByIdService(id, itemId);
+    await prisma.gpu.delete({ where: { id: itemId } });
     return panel;
   } else {
-    return await prisma.panelCase.delete({
-      where: { id: pid },
+    return await prisma.panelGpu.delete({
+      where: { id },
       include: {
         category: {
           select: {
@@ -263,7 +239,7 @@ async function deleteCaseService(pid: string, itemId: string) {
             categoryName: true,
           },
         },
-        case: {
+        gpu: {
           select: {
             id: true,
             model: true,
@@ -287,44 +263,24 @@ async function deleteCaseService(pid: string, itemId: string) {
   }
 }
 
-async function updateCaseService(
-  pid: string,
-  caseDto: PanelCase,
-  cases: any,
+async function updateGpuService(
+  id: string,
+  gpu: PanelGpu,
+  gpus: any,
   color: any,
-  img: Image[],
-  listMotherBoardId: string[]
+  img: Image[]
 ) {
-  const listPanelCaseId = await prisma.panelCase.findFirst({
-    where: { id: pid },
-    select: {
-      panelmotherBoard: {
-        select: {
-          id: true,
-        },
-      },
-    },
-  });
-  var dicon = listPanelCaseId?.panelmotherBoard
-    .map((e) => {
-      return e.id;
-    })
-    .map((e) => {
-      if (!listMotherBoardId.includes(e)) {
-        return e;
-      }
-    });
-
-  return await prisma.panelCase.update({
-    where: { id: pid },
+  return await prisma.panelGpu.update({
+    where: { id },
     data: {
-      name: caseDto.name,
-      case: {
+      name: gpu.name,
+      gpu: {
         update: {
-          where: { id: cases.id },
+          where: { id: gpus.id },
           data: {
-            model: cases.model,
-            price: Number(cases.price) as number,
+            model: gpus.model,
+            price: Number(gpus.price) as number,
+            spec: gpus.spec,
             color:
               img.length == 0
                 ? {
@@ -347,21 +303,6 @@ async function updateCaseService(
           },
         },
       },
-      panelmotherBoard: {
-        connect:
-          listMotherBoardId.length == 0
-            ? []
-            : listMotherBoardId.map((e) => {
-                return {
-                  id: e,
-                };
-              }),
-        disconnect: dicon?.map((d) => {
-          return {
-            id: d,
-          };
-        }),
-      },
     },
     include: {
       category: {
@@ -370,11 +311,12 @@ async function updateCaseService(
           categoryName: true,
         },
       },
-      case: {
+      gpu: {
         select: {
           id: true,
           model: true,
           price: true,
+          spec: true,
           color: {
             select: {
               id: true,
@@ -389,70 +331,29 @@ async function updateCaseService(
           },
         },
       },
-      panelmotherBoard: {
-        include: {
-          category: {
-            select: {
-              id: true,
-              categoryName: true,
-            },
-          },
-          motherBoard: {
-            select: {
-              id: true,
-              model: true,
-              price: true,
-              color: {
-                select: {
-                  id: true,
-                  color: true,
-                  image: {
-                    select: {
-                      id: true,
-                      imageUrl: true,
-                    },
-                  },
-                },
-              },
-            },
-          },
-        },
-      },
     },
   });
 }
-async function deletePanelCaseService(id: string) {
-  const listPanelCaseId = await prisma.panelCase.findUnique({
+
+async function deletePanelGpuService(id: string) {
+  const listPanelGpuId = await prisma.panelGpu.findUnique({
     where: { id },
-    select: {
-      panelmotherBoard: {
-        select: {
-          id: true,
-        },
-      },
-    },
   });
-  await prisma.panelCase.update({
+  await prisma.panelGpu.update({
     where: { id },
-    data: {
-      panelmotherBoard: {
-        disconnect: listPanelCaseId?.panelmotherBoard.map((e) => {
-          return e;
-        }),
-      },
-    },
+    data: {},
   });
-  return await prisma.panelCase.delete({
+  return await prisma.panelStorage.delete({
     where: { id: id },
   });
 }
 export default {
-  deletePanelCaseService,
-  getPanelCaseByIdService,
-  createCaseService,
-  getAllCaseServie,
-  getCaseByIdService,
-  deleteCaseService,
-  updateCaseService,
-  createCaseWithExistPanelService,
+  deleteGpuService,
+  getGpuByIdService,
+  createGpuWithExistPanelService,
+  getPanelGpuByIdService,
+  getAllGpuServie,
+  createGpuService,
+  deletePanelGpuService,
+  updateGpuService,
 };
