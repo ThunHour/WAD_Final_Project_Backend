@@ -3,7 +3,7 @@ import { respone } from "../../payload/respone/defaultRespone";
 import { ramRequest } from "../../payload/request/ram.Resquest";
 import upload from "../../util/picture.upload";
 import ramService from "./ram.service";
-import { Image, PanelMotherBoard } from "@prisma/client";
+import { Image } from "@prisma/client";
 async function createRam(req: Request, res: Response, next: NextFunction) {
   try {
     var image = req.files;

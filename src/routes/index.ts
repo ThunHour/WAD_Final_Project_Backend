@@ -4,7 +4,7 @@ import brand from "./brand/index";
 import category from "./category/index";
 import cases from "./case/index";
 import ram from "./ram/index";
-// import motherBoard from "./motherBoard/index";
+import motherBoard from "./motherBoard/index";
 import cpu from "./cpu/index";
 import storage from "./storage/index";
 import gpu from "./gpu/index";
@@ -33,7 +33,7 @@ export default (app: Application) => {
   route.use("/category", category());
   route.use("/case", cases());
   route.use("/ram", ram());
-  // route.use("/motherBoard", motherBoard());
+  route.use("/motherBoard", motherBoard());
   route.use("/cpu", cpu());
   route.use("/storage", storage());
   route.use("/gpu", gpu());

@@ -1,6 +1,5 @@
 import { NextFunction, Request, Response } from "express";
 import { respone } from "../../payload/respone/defaultRespone";
-import { Gpu } from "@prisma/client";
 import upload from "../../util/picture.upload";
 import gpuService from "./gpu.service";
 import { gpuRequest } from "../../payload/request/gpu.Request";

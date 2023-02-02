@@ -1,10 +1,4 @@
-import {
-  PrismaClient,
-  Image,
-  PanelStorage,
-  PanelGpu,
-  Gpu,
-} from "@prisma/client";
+import { PrismaClient, Image, PanelGpu } from "@prisma/client";
 const prisma = new PrismaClient();
 import { gpuRequest } from "../../payload/request/gpu.Request";
 
