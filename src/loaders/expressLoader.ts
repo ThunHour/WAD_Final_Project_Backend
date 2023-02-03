@@ -7,7 +7,8 @@ const eurekaHelper = require("../config/eureka/eureka-helper");
 import config from "../config/config";
 export default (app: Application) => {
   // Application routing
-  eurekaHelper.registerWithEureka("main-service", config.PORT || 3000);
+  // eurekaHelper.registerWithEureka("main-service", config.PORT || 3000);
+
   app.use(rateLimiterUsingThirdParty);
   app.use(cors());
   app.use(json());

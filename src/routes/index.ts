@@ -11,6 +11,7 @@ import gpu from "./gpu/index";
 import powerSupply from "./powerSupply/index";
 import passport from "passport";
 import "../config/google/google.config";
+import "../config/facebook/facebook.config";
 import Session from "express-session";
 
 export default (app: Application) => {
@@ -51,11 +52,29 @@ export default (app: Application) => {
       res.redirect("/success");
     }
   );
+
+  route.get("/facebook", passport.authenticate("facebook"));
+
+  route.get(
+    "/facebook/callback",
+    passport.authenticate("facebook", { failureRedirect: "/failed" }),
+    function (req, res) {
+      res.redirect("/success");
+    }
+  );
+
   route.get("/success", (req, res) => {
     res.json("success");
   });
   route.get("/failed", (req, res) => {
     res.json("failed");
+  });
+
+  route.get("/logout", (req, res) => {
+    req.session.destroy(function (err) {
+      res.clearCookie("connect.sid");
+      res.send("you logged out");
+    });
   });
 
   app.use("/", route);

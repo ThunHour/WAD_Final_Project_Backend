@@ -13,6 +13,7 @@ specifiers:
   "@types/multer": ^1.4.7
   "@types/node": ^18.11.18
   "@types/passport": ^1.0.11
+  "@types/passport-facebook": ^2.1.11
   "@types/passport-google-oauth20": ^2.0.11
   "@types/uuid": ^9.0.0
   bcrypt: ^5.1.0
@@ -32,6 +33,7 @@ specifiers:
   multer: 1.4.5-lts.1
   nodemon: ^2.0.20
   passport: ^0.6.0
+  passport-facebook: ^3.0.0
   passport-google: ^0.3.0
   passport-google-oauth20: ^2.0.0
   prettier: ^2.8.1
@@ -84,7 +86,9 @@ dependencies:
 devDependencies:
   "@types/express-session": 1.17.5
   "@types/passport": 1.0.11
+  "@types/passport-facebook": 2.1.11
   "@types/passport-google-oauth20": 2.0.11
+  passport-facebook: 3.0.0
 
 packages:
   /@ampproject/remapping/2.2.0:
@@ -2151,6 +2155,16 @@ packages:
       "@types/node": 18.11.18
     dev: true
 
+  /@types/passport-facebook/2.1.11:
+    resolution:
+      {
+        integrity: sha512-YsZUZryJvHt2E/WdR22FlnCi9ckMwkGR+FwCcXq830rOvruhXJHJtKSXSD+Kn4phBsrEpqoP4xX6fFuEodk20A==,
+      }
+    dependencies:
+      "@types/express": 4.17.15
+      "@types/passport": 1.0.11
+    dev: true
+
   /@types/passport-google-oauth20/2.0.11:
     resolution:
       {
@@ -2659,7 +2673,6 @@ packages:
         integrity: sha512-ir1UPr3dkwexU7FdV8qBBbNDRUhMmIekYMFZfi+C/sLNnRESKPl23nB9b2pltqfOQNnGzsDdId90AEtG5tCx4A==,
       }
     engines: { node: ">=6.0.0" }
-    dev: false
 
   /bcrypt-pbkdf/1.0.2:
     resolution:
@@ -6169,7 +6182,6 @@ packages:
       {
         integrity: sha512-a5ERWK1kh38ExDEfoO6qUHJb32rd7aYmPHuyCu3Fta/cnICvYmgd2uhuKXvPD+PXB+gCEYYEaQdIRAjCOwAKNA==,
       }
-    dev: false
 
   /object-assign/4.1.1:
     resolution:
@@ -6335,6 +6347,16 @@ packages:
     engines: { node: ">= 0.8" }
     dev: false
 
+  /passport-facebook/3.0.0:
+    resolution:
+      {
+        integrity: sha512-K/qNzuFsFISYAyC1Nma4qgY/12V3RSLFdFVsPKXiKZt434wOvthFW1p7zKa1iQihQMRhaWorVE1o3Vi1o+ZgeQ==,
+      }
+    engines: { node: ">= 0.4.0" }
+    dependencies:
+      passport-oauth2: 1.6.1
+    dev: true
+
   /passport-google-oauth20/2.0.0:
     resolution:
       {
@@ -6368,7 +6390,6 @@ packages:
       passport-strategy: 1.0.0
       uid2: 0.0.4
       utils-merge: 1.0.1
-    dev: false
 
   /passport-openid/0.3.1:
     resolution:
@@ -6388,7 +6409,6 @@ packages:
         integrity: sha512-CB97UUvDKJde2V0KDWWB3lyf6PC3FaZP7YxZ2G8OAtn9p4HI9j9JLP9qjOGZFvyl8uwNT8qM+hGnz/n16NI7oA==,
       }
     engines: { node: ">= 0.4.0" }
-    dev: false
 
   /passport/0.1.18:
     resolution:
@@ -7704,7 +7724,6 @@ packages:
       {
         integrity: sha512-IevTus0SbGwQzYh3+fRsAMTVVPOoIVufzacXcHPmdlle1jUpq7BRL+mw3dgeLanvGZdwwbWhRV6XrcFNdBmjWA==,
       }
-    dev: false
 
   /undefsafe/2.0.5:
     resolution:
@@ -7765,7 +7784,6 @@ packages:
         integrity: sha512-pMZTvIkT1d+TFGvDOqodOclx0QWkkgi6Tdoa8gC8ffGAAqz9pzPTZWAybbsHHoED/ztMtkv/VoYTYyShUn81hA==,
       }
     engines: { node: ">= 0.4.0" }
-    dev: false
 
   /uuid/3.4.0:
     resolution:
