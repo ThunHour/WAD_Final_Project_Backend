@@ -1,4 +1,4 @@
-import { Case, Color, Image } from "@prisma/client";
+import { Image } from "@prisma/client";
 import { NextFunction, Request, Response } from "express";
 import upload from "../../util/picture.upload";
 import { respone } from "../../payload/respone/defaultRespone";

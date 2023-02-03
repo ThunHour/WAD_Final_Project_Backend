@@ -1,6 +1,5 @@
 import { NextFunction, Request, Response } from "express";
 import { respone } from "../../payload/respone/defaultRespone";
-import { PowerSupply } from "@prisma/client";
 import upload from "../../util/picture.upload";
 import powerSupplyService from "./powerSupply.service";
 import { powerSupplyRequest } from "../../payload/request/powerSupply.Request";

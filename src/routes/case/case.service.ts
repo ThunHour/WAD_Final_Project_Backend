@@ -1,4 +1,4 @@
-import { Color, PrismaClient, Image, Case, PanelCase } from "@prisma/client";
+import { PrismaClient, Image, PanelCase } from "@prisma/client";
 const prisma = new PrismaClient();
 import { caseRequest } from "../../payload/request/case.Request";
 async function createCaseService(
