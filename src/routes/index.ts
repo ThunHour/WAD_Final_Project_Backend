@@ -40,17 +40,13 @@ export default (app: Application) => {
   route.use("/powerSupply", powerSupply());
 
   route.get(
-    "/google/login",
-    passport.authenticate("google", { scope: ["profile", "email"] })
-  );
-  route.get(
-    "/google/signup",
+    "/google",
     passport.authenticate("google", { scope: ["profile", "email"] })
   );
 
   route.get(
     "/google/callback",
-    passport.authenticate("google", { failureRedirect: "/login" }),
+    passport.authenticate("google", { failureRedirect: "/failed" }),
     function (req, res) {
       res.redirect("/success");
     }
@@ -58,7 +54,7 @@ export default (app: Application) => {
   route.get("/success", (req, res) => {
     res.json("success");
   });
-  route.get("/login", (req, res) => {
+  route.get("/failed", (req, res) => {
     res.json("failed");
   });
 

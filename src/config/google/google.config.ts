@@ -35,7 +35,14 @@ passport.use(
           console.log("User already exist");
           done(null, user);
         } else {
-          console.log("add user");
+          console.log("User does not exist");
+          const addUser = await prisma.user.create({
+            data: {
+              email: profile.emails[0].value,
+              name: profile.name.givenName as string,
+              password: profile.id,
+            },
+          });
           done(null, user);
         }
       } catch (error) {
@@ -46,8 +53,11 @@ passport.use(
 );
 
 passport.serializeUser(function (user: any, done: any) {
-  done(null, user);
+  done(null, user.id);
 });
-passport.deserializeUser(async function (user: any, done: any) {
-  done(null, user);
+
+passport.deserializeUser((id: any, done: any) => {
+  prisma.user.findUnique({ where: { id: id } }).then((user: any) => {
+    done(null, user);
+  });
 });

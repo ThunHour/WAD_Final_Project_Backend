@@ -8,7 +8,7 @@ CREATE TABLE "User" (
     "name" TEXT NOT NULL,
     "password" TEXT NOT NULL,
     "role" "Role" NOT NULL DEFAULT 'USER',
-    "phoneNumber" TEXT NOT NULL,
+    "phoneNumber" TEXT,
 
     CONSTRAINT "User_pkey" PRIMARY KEY ("id")
 );
