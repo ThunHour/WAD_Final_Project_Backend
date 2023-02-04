@@ -1,14 +1,17 @@
 import passport from "passport";
-import GoogleStrategy from "passport-google-oauth20";
+import passportStrategy from "passport-facebook";
 import { PrismaClient, User } from "@prisma/client";
 const prisma = new PrismaClient();
+
+const FacebookStrategy = passportStrategy.Strategy;
+
 passport.use(
-  new GoogleStrategy.Strategy(
+  new FacebookStrategy(
     {
-      clientID:
-        "935103441483-fe04t49s730ttrr0kcft33jbv4tjfne4.apps.googleusercontent.com",
-      clientSecret: "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",
-      callbackURL: "http://localhost:3000/google/callback",
+      clientID: process.env.CLIENT_ID_FB as string,
+      clientSecret: process.env.CLIENT_SECRET_FB as string,
+      callbackURL: "http://localhost:3000/facebook/callback",
+      profileFields: ["id", "emails", "name"],
     },
     async function (
       accessToken: any,
@@ -16,15 +19,11 @@ passport.use(
       profile: any,
       done: any
     ) {
-      // User.findOrCreate({ googleId: profile.id }, function (err, user) {
-      //   return cb(err, user);
-      // });
       const newUser = {
-        googleId: profile.id,
+        facebookId: profile.id,
         displayName: profile.displayName,
         firstName: profile.name.givenName,
         lastName: profile.name.familyName,
-        image: profile.photos[0].value,
       };
       try {
         console.log(newUser);
