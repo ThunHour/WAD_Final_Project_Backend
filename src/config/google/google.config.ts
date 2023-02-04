@@ -43,6 +43,7 @@ passport.use(
               password: profile.id,
             },
           });
+
           done(null, user);
         }
       } catch (error) {

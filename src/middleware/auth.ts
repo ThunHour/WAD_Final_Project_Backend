@@ -1,19 +1,23 @@
+import { log } from "console";
 import { Request, Response, NextFunction } from "express";
 import { verify } from "jsonwebtoken";
 import config from "../config/config";
-export default async (req: any, res: Response, next: NextFunction) => {
+export const authMiddleware = async (
+  req: any,
+  res: Response,
+  next: NextFunction
+) => {
   // get token from bearer header
-  if (!req.headers.authorization) {
+  if (!req.cookies.token) {
     return res.status(401).send({ message: "No token provided" });
   }
   // split bearer token into two parts
-  const [, token] = req.headers.authorization.split(" ");
-
+  const token = req.cookies.token;
   if (!token) {
     return res.status(401).send({ error: "No token provided" });
   }
   try {
-    const decoded = await verify(token, config.JWT_SECRET!);
+    const decoded = await verify(token, process.env.ACCESS_TOKEN_SECRET!);
     req.user = decoded;
     next();
   } catch (err) {

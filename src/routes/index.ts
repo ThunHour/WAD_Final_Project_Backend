@@ -13,7 +13,8 @@ import passport from "passport";
 import "../config/google/google.config";
 import "../config/facebook/facebook.config";
 import Session from "express-session";
-
+import { authMiddleware } from "../middleware/auth";
+import { authorizeUser } from "../middleware/authorize";
 export default (app: Application) => {
   const route = Router();
 
@@ -30,15 +31,15 @@ export default (app: Application) => {
   route.use(passport.session());
 
   route.use("/auth", auth());
-  route.use("/brand", brand());
-  route.use("/category", category());
-  route.use("/case", cases());
-  route.use("/ram", ram());
-  route.use("/motherBoard", motherBoard());
-  route.use("/cpu", cpu());
-  route.use("/storage", storage());
-  route.use("/gpu", gpu());
-  route.use("/powerSupply", powerSupply());
+  route.use("/brand", authMiddleware, brand());
+  route.use("/category", authMiddleware, category());
+  route.use("/case", authMiddleware, cases());
+  route.use("/ram", authMiddleware, ram());
+  route.use("/motherBoard", authMiddleware, motherBoard());
+  route.use("/cpu", authMiddleware, cpu());
+  route.use("/storage", authMiddleware, authorizeUser("ADMIN"), storage());
+  route.use("/gpu", authMiddleware, gpu());
+  route.use("/powerSupply", authMiddleware, powerSupply());
 
   route.get(
     "/google",

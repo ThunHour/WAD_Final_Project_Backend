@@ -13,6 +13,7 @@ export default () => {
   router.delete("/delete/:id/:itemId", storageController.deleteStorage);
   router.put(
     "/update/:id",
+
     uploadFile.array("file"),
     storageController.updateStorage
   );
