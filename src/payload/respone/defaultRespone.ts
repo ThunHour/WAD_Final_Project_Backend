@@ -6,6 +6,7 @@ interface defaultRespone {
 export function respone(
   res: Response,
   data: any,
+
   message: string,
   statusCode: number
 ) {

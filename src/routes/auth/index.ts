@@ -1,13 +1,9 @@
 import { Router } from "express";
 import authController from "./auth.controller";
-import img from "../../util/picture.upload";
-
-import { PrismaClient } from "@prisma/client";
-const prisma = new PrismaClient();
 
 export default () => {
   const router = Router();
-  // router.post("/login");
-  // router.post("/signup");
+  router.post("/login", authController.login);
+  router.post("/signup", authController.signUp);
   return router;
 };
