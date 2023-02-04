@@ -1,32 +1,9 @@
 version: "3.1"
 
 services:
-  # db:
-  #   image: postgres:14.3-alpine
-  #   container_name: postgres-wadfinal
-  #   restart: unless-stopped
-  #   environment:
-  #     POSTGRES_USER: wadfinal
-  #     POSTGRES_PASSWORD: 123
-  #     POSTGRES_DB: wadfinal
-  #   expose:
-  #     - "5433"
-  #   ports:
-  #     - "5433:5433"
-
-  #   command: -p 5433
-  node-service:
-    container_name: main-server
-    build: .
-    expose:
-      - 4000
-    command:
-      - pnpm start
-
   db:
-    image: postgres
-    ports:
-      - "5433:5433"
+    image: postgres:14.3-alpine
+    container_name: postgres-wadfinal
     restart: unless-stopped
     environment:
       POSTGRES_USER: wadfinal
@@ -34,8 +11,20 @@ services:
       POSTGRES_DB: wadfinal
     expose:
       - "5433"
-
-    port:
+    ports:
       - "5433:5433"
 
     command: -p 5433
+  # node-service:
+  #   depends_on:
+  #     - db
+  #   environment:
+  #     - DATABASE_URL_PRISMA=$DATABASE_URL_PRISMA
+  #   container_name: main-server
+  #   build: .
+  #   restart: unless-stopped
+  #   env_file: ./.env
+  #   expose:
+  #     - 4000
+  #   stdin_open: true
+  #   tty: true
