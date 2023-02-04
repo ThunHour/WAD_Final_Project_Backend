@@ -1,6 +1,7 @@
 import { Response, Request, NextFunction } from "express";
 const jwt = require("jsonwebtoken");
 import { PrismaClient, User } from "@prisma/client";
+import config from "../config/config";
 const prisma = new PrismaClient();
 
 export const authorizeUser = (role: string) => {
@@ -8,7 +9,7 @@ export const authorizeUser = (role: string) => {
     const token = req.cookies.token;
     console.log(token);
 
-    const getUser = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+    const getUser = jwt.verify(token, config.ACCESS_TOKEN_SECRET);
     const userById = (await prisma.user.findUnique({
       where: { id: getUser.id },
     })) as User;

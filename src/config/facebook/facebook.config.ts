@@ -1,6 +1,7 @@
 import passport from "passport";
 import passportStrategy from "passport-facebook";
 import { PrismaClient, User } from "@prisma/client";
+import config from "../config";
 const prisma = new PrismaClient();
 
 const FacebookStrategy = passportStrategy.Strategy;
@@ -8,8 +9,8 @@ const FacebookStrategy = passportStrategy.Strategy;
 passport.use(
   new FacebookStrategy(
     {
-      clientID: process.env.CLIENT_ID_FB as string,
-      clientSecret: process.env.CLIENT_SECRET_FB as string,
+      clientID: config.CLIENT_ID_FB as string,
+      clientSecret: config.CLIENT_SECRET_FB as string,
       callbackURL: "http://localhost:3000/facebook/callback",
       profileFields: ["id", "emails", "name"],
     },
