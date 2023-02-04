@@ -1,9 +1,32 @@
 version: "3.1"
 
 services:
+  # db:
+  #   image: postgres:14.3-alpine
+  #   container_name: postgres-wadfinal
+  #   restart: unless-stopped
+  #   environment:
+  #     POSTGRES_USER: wadfinal
+  #     POSTGRES_PASSWORD: 123
+  #     POSTGRES_DB: wadfinal
+  #   expose:
+  #     - "5433"
+  #   ports:
+  #     - "5433:5433"
+
+  #   command: -p 5433
+  node-service:
+    container_name: main-server
+    build: .
+    expose:
+      - 4000
+    command:
+      - pnpm start
+
   db:
-    image: postgres:14.3-alpine
-    container_name: postgres-wadfinal
+    image: postgres
+    ports:
+      - "5433:5433"
     restart: unless-stopped
     environment:
       POSTGRES_USER: wadfinal
@@ -11,7 +34,8 @@ services:
       POSTGRES_DB: wadfinal
     expose:
       - "5433"
-    ports:
+
+    port:
       - "5433:5433"
 
     command: -p 5433

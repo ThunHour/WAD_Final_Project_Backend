@@ -5,9 +5,9 @@
   "main": "src/index.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start:dev": "nodemon",
+    "start": "nodemon",
     "build": "rimraf ./build && tsc",
-    "start": "pnpm run build && pnpm build/index.ts",
+    "dev": "pnpm run build && pnpm build/index.ts",
     "migrate": "rimraf ./prisma/migrations && prisma migrate dev --create-only && pnpm prisma migrate dev && prisma db seed",
     "prisma-studio": "npx prisma studio -p 1212",
     "prisma-client": "prisma generate",
