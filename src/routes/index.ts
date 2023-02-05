@@ -15,6 +15,8 @@ import "../config/facebook/facebook.config";
 import Session from "express-session";
 import { authMiddleware } from "../middleware/auth";
 import { authorizeUser } from "../middleware/authorize";
+import jwt from "../util/jwt-generate";
+
 export default (app: Application) => {
   const route = Router();
 
@@ -69,6 +71,24 @@ export default (app: Application) => {
   });
   route.get("/failed", (req, res) => {
     res.json("failed");
+  });
+
+  route.post("/token", async (req, res) => {
+    try {
+      const { refreshToken } = req.body;
+      if (!refreshToken)
+        return res.sendStatus(401).json("token is not present");
+      console.log(refreshToken);
+
+      const user = await jwt.verifyRefreshToken(refreshToken);
+      const token = await jwt.jwtGenerator(user);
+      res.json({
+        refreshToken: token.refreshToken,
+        accessToken: token.accessToken,
+      });
+    } catch (error) {
+      res.send(error);
+    }
   });
 
   route.get("/logout", (req, res) => {
