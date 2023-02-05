@@ -7,15 +7,13 @@ export const authMiddleware = async (
   next: NextFunction
 ) => {
   // get token from bearer header
-  if (!req.cookies.token) {
-    return res.status(401).send({ message: "No token provided" });
-  }
-  // split bearer token into two parts
-  const token = req.cookies.token;
-  if (!token) {
+  const authToken = req.header("Authorization");
+  if (!authToken) {
     return res.status(401).send({ error: "No token provided" });
   }
   try {
+    // split bearer token into two parts
+    const token = authToken.split(" ")[1];
     const decoded = await verify(token, config.ACCESS_TOKEN_SECRET!);
     req.user = decoded;
     next();

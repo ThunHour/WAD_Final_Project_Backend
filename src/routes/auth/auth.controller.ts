@@ -37,7 +37,7 @@ async function login(req: Request, res: Response, next: NextFunction) {
       return;
     }
     const user = await authService.loginService(req.body);
-    // respone(res, user, "Login user successfully", 200);
+
     if (user) {
       const token = jwtGen.jwtGenerator(user);
       res.cookie("token", token.accessToken, {
