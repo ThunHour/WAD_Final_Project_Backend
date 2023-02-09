@@ -13,7 +13,6 @@ async function createStorageService(
       categoryId: storage.categoryId,
       storage: {
         create: {
-          model: storage.model,
           spec: storage.spec,
           price: Number(storage.price),
           color: {
@@ -169,7 +168,6 @@ async function createStorageWithExistPanelService(
     data: {
       storage: {
         create: {
-          model: storage.model,
           price: Number(storage.price),
           spec: storage.spec,
           color: {
@@ -333,7 +331,6 @@ async function updateStorageService(
         update: {
           where: { id: storages.id },
           data: {
-            model: storages.model,
             price: Number(storages.price) as number,
             spec: storages.spec,
             color:

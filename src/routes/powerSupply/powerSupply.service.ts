@@ -12,7 +12,6 @@ async function createPowerSupplyService(
       categoryId: powerSupply.categoryId,
       powerSupply: {
         create: {
-          model: powerSupply.model,
           spec: powerSupply.spec,
           price: Number(powerSupply.price),
           color: {
@@ -132,7 +131,6 @@ async function createPowerSupplyWithExistPanelService(
     data: {
       powerSupply: {
         create: {
-          model: powerSupply.model,
           price: Number(powerSupply.price),
           spec: powerSupply.spec,
           color: {
@@ -275,7 +273,6 @@ async function updatePowerSupplyService(
         update: {
           where: { id: powerSupplies.id },
           data: {
-            model: powerSupplies.model,
             price: Number(powerSupplies.price) as number,
             spec: powerSupplies.spec,
             color:

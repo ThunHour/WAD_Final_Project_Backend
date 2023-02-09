@@ -12,11 +12,35 @@ async function createCategoryService(category: Category, img: any) {
         },
       },
     },
+    select: {
+      id: true,
+      categoryName: true,
+      brand: {
+        select: {
+          id: true,
+          brandName: true,
+        },
+      },
+      Image: {
+        select: {
+          id: true,
+          imageUrl: true,
+        },
+      },
+    },
   });
 }
 async function getAllCategoryServie() {
   return await prisma.category.findMany({
-    include: {
+    select: {
+      id: true,
+      categoryName: true,
+      brand: {
+        select: {
+          id: true,
+          brandName: true,
+        },
+      },
       Image: {
         select: {
           id: true,
@@ -29,7 +53,15 @@ async function getAllCategoryServie() {
 async function getCategoryByIdService(id: string) {
   return await prisma.category.findUnique({
     where: { id },
-    include: {
+    select: {
+      id: true,
+      categoryName: true,
+      brand: {
+        select: {
+          id: true,
+          brandName: true,
+        },
+      },
       Image: {
         select: {
           id: true,
@@ -42,7 +74,15 @@ async function getCategoryByIdService(id: string) {
 async function deleteCategoryService(id: string) {
   return await prisma.category.delete({
     where: { id },
-    include: {
+    select: {
+      id: true,
+      categoryName: true,
+      brand: {
+        select: {
+          id: true,
+          brandName: true,
+        },
+      },
       Image: {
         select: {
           id: true,
@@ -66,6 +106,22 @@ async function updateCategoryService(id: string, name: string, imgUrl: string) {
       Image: {
         update: {
           imageUrl: imgUrl,
+        },
+      },
+    },
+    select: {
+      id: true,
+      categoryName: true,
+      brand: {
+        select: {
+          id: true,
+          brandName: true,
+        },
+      },
+      Image: {
+        select: {
+          id: true,
+          imageUrl: true,
         },
       },
     },

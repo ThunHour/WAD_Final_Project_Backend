@@ -15,7 +15,7 @@ async function createCpuService(
         create: {
           type: cpuDto.type,
           spec: cpuDto.spec,
-          model: cpuDto.model,
+
           price: Number(cpuDto.price),
           color: {
             create: {
@@ -321,7 +321,7 @@ async function deleteCpuService(pid: string, itemId: string) {
 async function updateCpuService(
   pid: string,
   cpuDto: PanelCpu,
-  ram: any,
+  cpu: any,
   color: any,
   img: Image[],
   listMotherBoardId: string[]
@@ -352,10 +352,9 @@ async function updateCpuService(
       name: cpuDto.name,
       cpu: {
         update: {
-          where: { id: ram.id },
+          where: { id: cpu.id },
           data: {
-            model: ram.model,
-            price: Number(ram.price) as number,
+            price: Number(cpu.price) as number,
             color:
               img.length == 0
                 ? {
@@ -465,7 +464,7 @@ async function createCpuWithExistPanelService(
         create: {
           spec: cpuDto.spec,
           type: cpuDto.type,
-          model: cpuDto.model,
+
           price: Number(cpuDto.price) as number,
           color: {
             create: {

@@ -9,7 +9,6 @@ async function createGpuService(gpu: gpuRequest, img: Image[]) {
       categoryId: gpu.categoryId,
       gpu: {
         create: {
-          model: gpu.model,
           spec: gpu.spec,
           price: Number(gpu.price),
           color: {
@@ -36,6 +35,7 @@ async function createGpuService(gpu: gpuRequest, img: Image[]) {
           id: true,
           model: true,
           price: true,
+          spec: true,
           color: {
             select: {
               id: true,
@@ -69,6 +69,7 @@ async function getAllGpuServie() {
           id: true,
           model: true,
           price: true,
+          spec: true,
           color: {
             select: {
               id: true,
@@ -100,6 +101,7 @@ async function getPanelGpuByIdService(id: string) {
         select: {
           id: true,
           model: true,
+          spec: true,
           price: true,
           color: {
             select: {
@@ -129,7 +131,6 @@ async function createGpuWithExistPanelService(
     data: {
       gpu: {
         create: {
-          model: gpu.model,
           price: Number(gpu.price),
           spec: gpu.spec,
           color: {
@@ -160,6 +161,7 @@ async function createGpuWithExistPanelService(
         select: {
           id: true,
           model: true,
+          spec: true,
           price: true,
           color: {
             select: {
@@ -196,6 +198,7 @@ async function getGpuByIdService(id: string, itemId: string) {
         select: {
           id: true,
           model: true,
+          spec: true,
           price: true,
           color: {
             select: {
@@ -237,6 +240,7 @@ async function deleteGpuService(id: string, itemId: string) {
           select: {
             id: true,
             model: true,
+            spec: true,
             price: true,
             color: {
               select: {
@@ -272,7 +276,6 @@ async function updateGpuService(
         update: {
           where: { id: gpus.id },
           data: {
-            model: gpus.model,
             price: Number(gpus.price) as number,
             spec: gpus.spec,
             color:
@@ -308,6 +311,7 @@ async function updateGpuService(
       gpu: {
         select: {
           id: true,
+
           model: true,
           price: true,
           spec: true,
@@ -330,15 +334,8 @@ async function updateGpuService(
 }
 
 async function deletePanelGpuService(id: string) {
-  const listPanelGpuId = await prisma.panelGpu.findUnique({
+  return await prisma.panelGpu.delete({
     where: { id },
-  });
-  await prisma.panelGpu.update({
-    where: { id },
-    data: {},
-  });
-  return await prisma.panelStorage.delete({
-    where: { id: id },
   });
 }
 export default {

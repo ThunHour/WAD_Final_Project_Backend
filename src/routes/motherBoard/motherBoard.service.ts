@@ -42,7 +42,11 @@ async function getAllMotherBoardServie() {
         },
       },
       motherBoard: {
-        include: {
+        select: {
+          id: true,
+          model: true,
+          price: true,
+
           color: {
             select: {
               id: true,
@@ -452,6 +456,7 @@ async function createMotherBoardWithExistPanelService(
       motherBoard: {
         create: {
           price: Number(motherBoardDto.price),
+
           color: {
             create: {
               color: motherBoardDto.color,

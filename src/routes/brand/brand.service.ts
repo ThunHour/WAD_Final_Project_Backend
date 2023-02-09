@@ -11,6 +11,16 @@ async function createBrandService(brandName: string, img: string) {
         },
       },
     },
+    select: {
+      id: true,
+      brandName: true,
+      Image: {
+        select: {
+          id: true,
+          imageUrl: true,
+        },
+      },
+    },
   });
 }
 

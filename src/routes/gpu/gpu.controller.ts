@@ -12,15 +12,18 @@ async function createGpu(req: Request, res: Response, next: NextFunction) {
     const amount = image?.length;
     if (
       gpuDto.categoryId == null ||
-      image == undefined ||
       gpuDto.model == null ||
       gpuDto.price == null ||
-      gpuDto.spec == null
+      gpuDto.spec == null ||
+      gpuDto.color == null
     ) {
       respone(res, null, "bad request", 400);
       return;
     }
-    var up = await upload.uploadMulti(res, image, amount as number, "case");
+    console.log(image);
+
+    var up = await upload.uploadMulti(res, image, amount as number, "gpu");
+
     var gpus = await gpuService.createGpuService(gpuDto, up);
     respone(res, gpus, "Create gpu successfully", 201);
   } catch (error) {
@@ -150,12 +153,12 @@ async function deletePanelGpu(req: Request, res: Response, next: NextFunction) {
       respone(res, null, "id must not null", 400);
       return;
     }
-    const storages = await gpuService.deletePanelGpuService(id);
-    if (storages == null) {
+    const gpu = await gpuService.deletePanelGpuService(id);
+    if (gpu == null) {
       respone(res, null, "There are not storage found", 404);
       return;
     }
-    respone(res, storages, "Delete storage Successfully", 200);
+    respone(res, gpu, "Delete storage Successfully", 200);
   } catch (error) {
     respone(res, null, `${error}`, 500);
   }

@@ -12,7 +12,6 @@ async function createCaseService(
       categoryId: caseDto.categoryId,
       case: {
         create: {
-          model: caseDto.model,
           price: Number(caseDto.price),
           color: {
             create: {
@@ -166,7 +165,6 @@ async function createCaseWithExistPanelService(
     data: {
       case: {
         create: {
-          model: caseDto.model,
           price: Number(caseDto.price),
           color: {
             create: {
@@ -323,7 +321,6 @@ async function updateCaseService(
         update: {
           where: { id: cases.id },
           data: {
-            model: cases.model,
             price: Number(cases.price) as number,
             color:
               img.length == 0

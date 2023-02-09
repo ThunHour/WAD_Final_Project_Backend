@@ -6,8 +6,8 @@ async function createBrand(req: Request, res: Response, next: NextFunction) {
   try {
     var image = req.file;
     var brandName = req.body.brandName;
-    if (brandName == null || image == undefined) {
-      respone(res, null, "bad request", 400);
+    if (brandName == null) {
+      respone(res, null, "image is require", 400);
       return;
     }
     const checkBrand = await brandService.getBrandByName(brandName);

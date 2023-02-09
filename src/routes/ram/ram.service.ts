@@ -15,7 +15,7 @@ async function createRamService(
         create: {
           type: ramDto.type,
           spec: ramDto.spec,
-          model: ramDto.model,
+
           price: Number(ramDto.price),
           color: {
             create: {
@@ -354,7 +354,6 @@ async function updateRamService(
         update: {
           where: { id: ram.id },
           data: {
-            model: ram.model,
             price: Number(ram.price) as number,
             color:
               img.length == 0
@@ -465,7 +464,7 @@ async function createRamWithExistPanelService(
         create: {
           spec: ramDto.spec,
           type: ramDto.type,
-          model: ramDto.model,
+
           price: Number(ramDto.price) as number,
           color: {
             create: {

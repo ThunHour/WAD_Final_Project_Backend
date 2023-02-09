@@ -252,16 +252,34 @@ CREATE UNIQUE INDEX "Category_categoryName_key" ON "Category"("categoryName");
 CREATE UNIQUE INDEX "PanelGpu_name_key" ON "PanelGpu"("name");
 
 -- CreateIndex
+CREATE UNIQUE INDEX "PanelGpu_id_name_key" ON "PanelGpu"("id", "name");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "PanelCpu_name_key" ON "PanelCpu"("name");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "PanelCpu_id_name_key" ON "PanelCpu"("id", "name");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "PanelPowerSupply_name_key" ON "PanelPowerSupply"("name");
 
 -- CreateIndex
+CREATE UNIQUE INDEX "PanelPowerSupply_id_name_key" ON "PanelPowerSupply"("id", "name");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "PanelStorage_name_key" ON "PanelStorage"("name");
 
 -- CreateIndex
+CREATE UNIQUE INDEX "PanelStorage_id_name_key" ON "PanelStorage"("id", "name");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "PanelRam_name_key" ON "PanelRam"("name");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "PanelRam_id_name_key" ON "PanelRam"("id", "name");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "PanelCase_id_name_key" ON "PanelCase"("id", "name");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "PanelMotherBoard_id_key" ON "PanelMotherBoard"("id");
@@ -330,37 +348,37 @@ ALTER TABLE "Category" ADD CONSTRAINT "Category_brandId_fkey" FOREIGN KEY ("bran
 ALTER TABLE "PanelGpu" ADD CONSTRAINT "PanelGpu_categoryId_fkey" FOREIGN KEY ("categoryId") REFERENCES "Category"("category_id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Gpu" ADD CONSTRAINT "Gpu_paneGpulId_fkey" FOREIGN KEY ("paneGpulId") REFERENCES "PanelGpu"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "Gpu" ADD CONSTRAINT "Gpu_paneGpulId_model_fkey" FOREIGN KEY ("paneGpulId", "model") REFERENCES "PanelGpu"("id", "name") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "PanelCpu" ADD CONSTRAINT "PanelCpu_categoryId_fkey" FOREIGN KEY ("categoryId") REFERENCES "Category"("category_id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Cpu" ADD CONSTRAINT "Cpu_panelCpuId_fkey" FOREIGN KEY ("panelCpuId") REFERENCES "PanelCpu"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "Cpu" ADD CONSTRAINT "Cpu_panelCpuId_model_fkey" FOREIGN KEY ("panelCpuId", "model") REFERENCES "PanelCpu"("id", "name") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "PanelPowerSupply" ADD CONSTRAINT "PanelPowerSupply_categoryId_fkey" FOREIGN KEY ("categoryId") REFERENCES "Category"("category_id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "PowerSupply" ADD CONSTRAINT "PowerSupply_PanelPowerSupplyId_fkey" FOREIGN KEY ("PanelPowerSupplyId") REFERENCES "PanelPowerSupply"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "PowerSupply" ADD CONSTRAINT "PowerSupply_PanelPowerSupplyId_model_fkey" FOREIGN KEY ("PanelPowerSupplyId", "model") REFERENCES "PanelPowerSupply"("id", "name") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "PanelStorage" ADD CONSTRAINT "PanelStorage_categoryId_fkey" FOREIGN KEY ("categoryId") REFERENCES "Category"("category_id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Storage" ADD CONSTRAINT "Storage_panelStorageId_fkey" FOREIGN KEY ("panelStorageId") REFERENCES "PanelStorage"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "Storage" ADD CONSTRAINT "Storage_panelStorageId_model_fkey" FOREIGN KEY ("panelStorageId", "model") REFERENCES "PanelStorage"("id", "name") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "PanelRam" ADD CONSTRAINT "PanelRam_categoryId_fkey" FOREIGN KEY ("categoryId") REFERENCES "Category"("category_id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Ram" ADD CONSTRAINT "Ram_panelRamId_fkey" FOREIGN KEY ("panelRamId") REFERENCES "PanelRam"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "Ram" ADD CONSTRAINT "Ram_panelRamId_model_fkey" FOREIGN KEY ("panelRamId", "model") REFERENCES "PanelRam"("id", "name") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "PanelCase" ADD CONSTRAINT "PanelCase_categoryId_fkey" FOREIGN KEY ("categoryId") REFERENCES "Category"("category_id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Case" ADD CONSTRAINT "Case_panelCaseId_fkey" FOREIGN KEY ("panelCaseId") REFERENCES "PanelCase"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "Case" ADD CONSTRAINT "Case_panelCaseId_model_fkey" FOREIGN KEY ("panelCaseId", "model") REFERENCES "PanelCase"("id", "name") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "PanelMotherBoard" ADD CONSTRAINT "PanelMotherBoard_categoryId_fkey" FOREIGN KEY ("categoryId") REFERENCES "Category"("category_id") ON DELETE SET NULL ON UPDATE CASCADE;

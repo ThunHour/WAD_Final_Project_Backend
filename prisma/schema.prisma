@@ -48,6 +48,8 @@ model PanelGpu {
   gpu        Gpu[]
   category   Category? @relation(fields: [categoryId], references: [id])
   categoryId String?
+
+  @@unique([id, name])
 }
 
 model Gpu {
@@ -57,7 +59,7 @@ model Gpu {
   price      Float
   color      Color?
   customize  Customize[]
-  panelGpu   PanelGpu?   @relation(fields: [paneGpulId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  panelGpu   PanelGpu?   @relation(fields: [paneGpulId, model], references: [id, name], onDelete: Cascade, onUpdate: Cascade)
   paneGpulId String?
 }
 
@@ -68,6 +70,8 @@ model PanelCpu {
   panelmotherBoard PanelMotherBoard[]
   category         Category?          @relation(fields: [categoryId], references: [id])
   categoryId       String?
+
+  @@unique([id, name])
 }
 
 model Cpu {
@@ -78,7 +82,7 @@ model Cpu {
   type       String
   color      Color?
   customize  Customize[]
-  panelCpu   PanelCpu?   @relation(fields: [panelCpuId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  panelCpu   PanelCpu?   @relation(fields: [panelCpuId, model], references: [id, name], onDelete: Cascade, onUpdate: Cascade)
   panelCpuId String?
 }
 
@@ -88,6 +92,8 @@ model PanelPowerSupply {
   powerSupply PowerSupply[]
   category    Category?     @relation(fields: [categoryId], references: [id])
   categoryId  String?
+
+  @@unique([id, name])
 }
 
 model PowerSupply {
@@ -97,7 +103,7 @@ model PowerSupply {
   price              Float
   color              Color?
   customize          Customize[]
-  panelPowerSupply   PanelPowerSupply? @relation(fields: [PanelPowerSupplyId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  panelPowerSupply   PanelPowerSupply? @relation(fields: [PanelPowerSupplyId, model], references: [id, name], onDelete: Cascade, onUpdate: Cascade)
   PanelPowerSupplyId String?
 }
 
@@ -108,6 +114,8 @@ model PanelStorage {
   panelmotherBoard PanelMotherBoard[]
   category         Category?          @relation(fields: [categoryId], references: [id])
   categoryId       String?
+
+  @@unique([id, name])
 }
 
 model Storage {
@@ -117,7 +125,7 @@ model Storage {
   spec           String
   price          Float
   customize      Customize[]
-  panelStorage   PanelStorage? @relation(fields: [panelStorageId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  panelStorage   PanelStorage? @relation(fields: [panelStorageId, model], references: [id, name], onDelete: Cascade, onUpdate: Cascade)
   panelStorageId String?
 }
 
@@ -128,6 +136,8 @@ model PanelRam {
   panelmotherBoard PanelMotherBoard[]
   category         Category?          @relation(fields: [categoryId], references: [id])
   categoryId       String?
+
+  @@unique([id, name])
 }
 
 model Ram {
@@ -138,7 +148,7 @@ model Ram {
   color      Color?
   type       String
   customize  Customize[]
-  panelRam   PanelRam?   @relation(fields: [panelRamId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  panelRam   PanelRam?   @relation(fields: [panelRamId, model], references: [id, name], onDelete: Cascade, onUpdate: Cascade)
   panelRamId String?
 }
 
@@ -149,6 +159,8 @@ model PanelCase {
   panelmotherBoard PanelMotherBoard[]
   category         Category?          @relation(fields: [categoryId], references: [id])
   categoryId       String?
+
+  @@unique([id, name])
 }
 
 model Case {
@@ -157,18 +169,18 @@ model Case {
   color       Color?
   price       Float
   customize   Customize[]
-  panelCase   PanelCase?  @relation(fields: [panelCaseId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  panelCase   PanelCase?  @relation(fields: [panelCaseId, model], references: [id, name], onDelete: Cascade, onUpdate: Cascade)
   panelCaseId String?
 }
 
 model PanelMotherBoard {
-  id           String         @id @default(uuid()) @unique
-  name         String         
+  id           String         @id @unique @default(uuid())
+  name         String
   motherBoard  MotherBoard[]
   panelcpu     PanelCpu[]
   panelRam     PanelRam[]
   panelstorage PanelStorage[]
-  panelcase    PanelCase[] 
+  panelcase    PanelCase[]
   category     Category?      @relation(fields: [categoryId], references: [id])
   categoryId   String?
 
@@ -176,12 +188,12 @@ model PanelMotherBoard {
 }
 
 model MotherBoard {
-  id                 String            @id @default(uuid()) @unique
-  model              String 
+  id                 String            @id @unique @default(uuid())
+  model              String
   price              Float
   color              Color?
   customize          Customize[]
-  panelMotherBoard   PanelMotherBoard? @relation(fields: [panelMotherBoardId,model], references: [id,name], onDelete: Cascade, onUpdate: Cascade)
+  panelMotherBoard   PanelMotherBoard? @relation(fields: [panelMotherBoardId, model], references: [id, name], onDelete: Cascade, onUpdate: Cascade)
   panelMotherBoardId String?
 }
 
@@ -241,5 +253,3 @@ model Customize {
   caseId        String?
   userId        String?
 }
-
-
