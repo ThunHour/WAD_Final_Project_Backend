@@ -38,6 +38,7 @@ async function createPowerSupplyService(
           id: true,
           model: true,
           price: true,
+          spec: true,
           color: {
             select: {
               id: true,
@@ -71,6 +72,7 @@ async function getAllPowerSupplyServie() {
           id: true,
           model: true,
           price: true,
+          spec: true,
           color: {
             select: {
               id: true,

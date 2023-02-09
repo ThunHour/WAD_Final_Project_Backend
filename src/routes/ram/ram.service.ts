@@ -109,6 +109,7 @@ async function getAllRamServie() {
           id: true,
           model: true,
           price: true,
+          spec: true,
           color: {
             select: {
               id: true,

@@ -15,8 +15,8 @@ async function createCpuService(
         create: {
           type: cpuDto.type,
           spec: cpuDto.spec,
-
           price: Number(cpuDto.price),
+
           color: {
             create: {
               color: cpuDto.color,

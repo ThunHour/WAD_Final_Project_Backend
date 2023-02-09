@@ -8,8 +8,11 @@ export default () => {
     uploadFile.array("file"),
     powerSupplyController.createPowerSupply
   );
-  router.get("/getAllGpu", powerSupplyController.getAllPowerSupply);
-  router.get("/getGpuById/:id", powerSupplyController.getPowerSupplyById);
+  router.get("/getAllPowerSupply", powerSupplyController.getAllPowerSupply);
+  router.get(
+    "/getPowerSupplyById/:id",
+    powerSupplyController.getPowerSupplyById
+  );
   router.delete("/delete/:id/:itemId", powerSupplyController.deletePowerSupply);
   router.put(
     "/update/:id",

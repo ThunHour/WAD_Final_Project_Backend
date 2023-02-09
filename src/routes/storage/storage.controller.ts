@@ -21,9 +21,13 @@ async function createStorage(req: Request, res: Response, next: NextFunction) {
       return;
     }
     const list = storageDto.listMotherBoardId.split(",");
-    var up = await upload.uploadMulti(res, image, amount as number, "case");
-    var cases = await storageService.createStorageService(storageDto, up, list);
-    respone(res, cases, "Create storage successfully", 201);
+    var up = await upload.uploadMulti(res, image, amount as number, "storage");
+    var storages = await storageService.createStorageService(
+      storageDto,
+      up,
+      list
+    );
+    respone(res, storages, "Create storage successfully", 201);
   } catch (error) {
     respone(res, null, `${error}`, 500);
   }
