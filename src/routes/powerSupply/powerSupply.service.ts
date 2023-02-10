@@ -262,26 +262,31 @@ async function deletePowerSupplyService(id: string, itemId: string) {
 
 async function updatePowerSupplyService(
   id: string,
-  powerSupply: PanelPowerSupply,
-  powerSupplies: any,
-  color: any,
+  powerSupply: any,
   img: Image[]
 ) {
+  if (img.length > 0) {
+    await prisma.color.delete({
+      where: {
+        powerSupplyId: powerSupply.itemId,
+      },
+    });
+  }
   return await prisma.panelPowerSupply.update({
     where: { id },
     data: {
-      name: powerSupply.name,
+      name: powerSupply.model,
       powerSupply: {
         update: {
-          where: { id: powerSupplies.id },
+          where: { id: powerSupply.itemId },
           data: {
-            price: Number(powerSupplies.price) as number,
-            spec: powerSupplies.spec,
+            price: Number(powerSupply.price) as number,
+            spec: powerSupply.spec,
             color:
-              img.length == 0
+              img.length != 0
                 ? {
-                    update: {
-                      color: color.color,
+                    create: {
+                      color: powerSupply.color,
                       image: {
                         createMany: {
                           data: img.map((c) => {
@@ -293,7 +298,7 @@ async function updatePowerSupplyService(
                   }
                 : {
                     update: {
-                      color: color.color,
+                      color: powerSupply.color,
                     },
                   },
           },
@@ -332,13 +337,6 @@ async function updatePowerSupplyService(
 }
 
 async function deletePanelPowerSupplyService(id: string) {
-  const listPanelPowerSupplyId = await prisma.panelPowerSupply.findUnique({
-    where: { id },
-  });
-  await prisma.panelGpu.update({
-    where: { id },
-    data: {},
-  });
   return await prisma.panelPowerSupply.delete({
     where: { id: id },
   });

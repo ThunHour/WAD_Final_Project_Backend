@@ -298,12 +298,17 @@ async function deleteStorageService(id: string, itemId: string) {
 
 async function updateStorageService(
   id: string,
-  storage: PanelStorage,
-  storages: any,
-  color: any,
+  storage: any,
   img: Image[],
   listMotherBoardId: string[]
 ) {
+  if (img.length > 0) {
+    await prisma.color.delete({
+      where: {
+        storageId: storage.itemId,
+      },
+    });
+  }
   const listPanelStorageId = await prisma.panelStorage.findFirst({
     where: { id: id },
     select: {
@@ -330,15 +335,17 @@ async function updateStorageService(
       name: storage.name,
       storage: {
         update: {
-          where: { id: storages.id },
+          where: { id: storage.itemId },
+
           data: {
-            price: Number(storages.price) as number,
-            spec: storages.spec,
+            price: Number(storage.price) as number,
+            spec: storage.spec,
+
             color:
-              img.length == 0
+              img.length != 0
                 ? {
-                    update: {
-                      color: color.color,
+                    create: {
+                      color: storage.color,
                       image: {
                         createMany: {
                           data: img.map((c) => {
@@ -350,7 +357,7 @@ async function updateStorageService(
                   }
                 : {
                     update: {
-                      color: color.color,
+                      color: storage.color,
                     },
                   },
           },

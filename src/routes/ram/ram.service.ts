@@ -321,12 +321,18 @@ async function deleteRamService(pid: string, itemId: string) {
 
 async function updateRamService(
   pid: string,
-  ramDto: PanelRam,
   ram: any,
-  color: any,
+
   img: Image[],
   listMotherBoardId: string[]
 ) {
+  if (img.length > 0) {
+    await prisma.color.delete({
+      where: {
+        ramId: ram.itemId,
+      },
+    });
+  }
   const listPanelRamId = await prisma.panelRam.findFirst({
     where: { id: pid },
     select: {
@@ -350,17 +356,17 @@ async function updateRamService(
   return await prisma.panelRam.update({
     where: { id: pid },
     data: {
-      name: ramDto.name,
+      name: ram.model,
       ram: {
         update: {
-          where: { id: ram.id },
+          where: { id: ram.itemId },
           data: {
             price: Number(ram.price) as number,
             color:
               img.length == 0
                 ? {
-                    update: {
-                      color: color.color,
+                    create: {
+                      color: ram.color,
                       image: {
                         createMany: {
                           data: img.map((c) => {
@@ -372,7 +378,7 @@ async function updateRamService(
                   }
                 : {
                     update: {
-                      color: color.color,
+                      color: ram.color,
                     },
                   },
           },

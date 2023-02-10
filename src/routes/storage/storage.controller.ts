@@ -148,9 +148,9 @@ async function updateStorage(req: Request, res: Response, next: NextFunction) {
         : storageDto.listMotherBoardId.split(",");
     var updateStorage = await storageService.updateStorageService(
       id,
-      checkPanelStorage,
-      checkPanelStorage.storage[0],
-      checkPanelStorage.storage[0].color,
+
+      storageDto,
+
       up as Image[],
       listOfMotherBoardId
     );

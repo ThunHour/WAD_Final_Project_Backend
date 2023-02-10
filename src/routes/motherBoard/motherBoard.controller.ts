@@ -18,7 +18,6 @@ async function createMotherBoard(
       image == undefined ||
       image.length == 0 ||
       motherBoardDto.model == null ||
-      motherBoardDto.model == null ||
       motherBoardDto.color == null ||
       motherBoardDto.price == null
     ) {
@@ -142,9 +141,7 @@ async function updateMotherBoard(
         : await upload.uploadMulti(res, image, amount as number, "ram");
     var updateMotherBoard = await motherBoardService.updateMotherBoardService(
       id,
-      checkMotherBoard,
-      checkMotherBoard.motherBoard[0],
-      checkMotherBoard.motherBoard[0].color,
+      motherBoardDto,
       up as Image[]
     );
     respone(res, updateMotherBoard, "update successful", 200);
