@@ -20,7 +20,6 @@ async function createGpu(req: Request, res: Response, next: NextFunction) {
       respone(res, null, "bad request", 400);
       return;
     }
-    console.log(image);
 
     var up = await upload.uploadMulti(res, image, amount as number, "gpu");
 
@@ -127,16 +126,13 @@ async function updateGpu(req: Request, res: Response, next: NextFunction) {
       respone(res, null, "There are not case found", 404);
       return;
     }
-
     var up =
       image == undefined || image.length == 0
         ? []
         : await upload.uploadMulti(res, image, amount as number, "gpu");
     var updateGpu = await gpuService.updateGpuService(
       id,
-      checkPanelGpu,
-      checkPanelGpu.gpu[0],
-      checkPanelGpu.gpu[0].color,
+      gpuDto,
       up as Image[]
     );
     respone(res, updateGpu, "update successful", 200);

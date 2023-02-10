@@ -30,6 +30,35 @@ async function createMotherBoardService(
         },
       },
     },
+    select: {
+      id: true,
+      name: true,
+      category: {
+        select: {
+          id: true,
+          categoryName: true,
+        },
+      },
+      motherBoard: {
+        select: {
+          id: true,
+          model: true,
+          price: true,
+          color: {
+            select: {
+              id: true,
+              color: true,
+              image: {
+                select: {
+                  id: true,
+                  imageUrl: true,
+                },
+              },
+            },
+          },
+        },
+      },
+    },
   });
 }
 async function getAllMotherBoardServie() {
@@ -378,30 +407,35 @@ async function deleteMotherBoardService(pid: string, itemId: string) {
 
 async function updateMotherBoardService(
   pid: string,
-  motherBoardDto: PanelMotherBoard,
   motherBoard: any,
-  color: any,
   img: Image[]
 ) {
+  if (img.length > 0) {
+    await prisma.color.delete({
+      where: {
+        motherBoardId: motherBoard.itemId,
+      },
+    });
+  }
   return await prisma.panelMotherBoard.update({
     where: { id: pid },
     data: {
-      name: motherBoardDto.name,
+      name: motherBoard.model,
       motherBoard: {
         update: {
-          where: { id: motherBoard.id },
+          where: { id: motherBoard.itemId },
           data: {
             price: Number(motherBoard.price) as number,
             color:
               img.length == 0
                 ? {
                     update: {
-                      color: color.color,
+                      color: motherBoard.color,
                     },
                   }
                 : {
-                    update: {
-                      color: color.color,
+                    create: {
+                      color: motherBoard.color,
                       image: {
                         createMany: {
                           data: img.map((c) => {

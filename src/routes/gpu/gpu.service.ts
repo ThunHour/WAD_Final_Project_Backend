@@ -261,28 +261,29 @@ async function deleteGpuService(id: string, itemId: string) {
   }
 }
 
-async function updateGpuService(
-  id: string,
-  gpu: PanelGpu,
-  gpus: any,
-  color: any,
-  img: Image[]
-) {
+async function updateGpuService(id: string, gpus: any, img: Image[]) {
+  if (img.length > 0) {
+    await prisma.color.delete({
+      where: {
+        gpuId: gpus.itemId,
+      },
+    });
+  }
   return await prisma.panelGpu.update({
     where: { id },
     data: {
-      name: gpu.name,
+      name: gpus.model,
       gpu: {
         update: {
-          where: { id: gpus.id },
+          where: { id: gpus.itemId },
           data: {
             price: Number(gpus.price) as number,
             spec: gpus.spec,
             color:
-              img.length == 0
+              img.length != 0
                 ? {
-                    update: {
-                      color: color.color,
+                    create: {
+                      color: gpus.color,
                       image: {
                         createMany: {
                           data: img.map((c) => {
@@ -294,7 +295,7 @@ async function updateGpuService(
                   }
                 : {
                     update: {
-                      color: color.color,
+                      color: gpus.color,
                     },
                   },
           },
