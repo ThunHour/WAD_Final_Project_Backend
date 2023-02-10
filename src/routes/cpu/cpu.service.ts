@@ -48,6 +48,8 @@ async function createCpuService(
           id: true,
           model: true,
           price: true,
+          type: true,
+          spec: true,
           color: {
             select: {
               id: true,
@@ -109,6 +111,8 @@ async function getAllCpuService() {
           id: true,
           model: true,
           price: true,
+          type: true,
+          spec: true,
           color: {
             select: {
               id: true,
@@ -170,6 +174,8 @@ async function getCpuByIdService(pid: string, itemId: string) {
         select: {
           id: true,
           model: true,
+          type: true,
+          spec: true,
           price: true,
           color: {
             select: {
@@ -231,6 +237,8 @@ async function getPanelCpuByIdService(id: string) {
         select: {
           id: true,
           model: true,
+          type: true,
+          spec: true,
           price: true,
           color: {
             select: {
@@ -297,6 +305,8 @@ async function deleteCpuService(pid: string, itemId: string) {
         cpu: {
           select: {
             id: true,
+            type: true,
+            spec: true,
             model: true,
             price: true,
             color: {
@@ -409,6 +419,8 @@ async function updateCpuService(
         select: {
           id: true,
           model: true,
+          type: true,
+          spec: true,
           price: true,
           color: {
             select: {
@@ -498,6 +510,8 @@ async function createCpuWithExistPanelService(
       cpu: {
         select: {
           id: true,
+          type: true,
+          spec: true,
           model: true,
           price: true,
           color: {

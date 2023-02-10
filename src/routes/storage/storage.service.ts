@@ -43,6 +43,7 @@ async function createStorageService(
       category: true,
       storage: {
         select: {
+          spec: true,
           id: true,
           model: true,
           price: true,
@@ -117,6 +118,35 @@ async function getAllStorageServie() {
                 select: {
                   id: true,
                   imageUrl: true,
+                },
+              },
+            },
+          },
+        },
+      },
+      panelmotherBoard: {
+        include: {
+          category: {
+            select: {
+              id: true,
+              categoryName: true,
+            },
+          },
+          motherBoard: {
+            select: {
+              id: true,
+              model: true,
+              price: true,
+              color: {
+                select: {
+                  id: true,
+                  color: true,
+                  image: {
+                    select: {
+                      id: true,
+                      imageUrl: true,
+                    },
+                  },
                 },
               },
             },
@@ -319,15 +349,12 @@ async function updateStorageService(
       },
     },
   });
-  var dicon = listPanelStorageId?.panelmotherBoard
-    .map((e) => {
-      return e.id;
-    })
-    .map((e) => {
-      if (!listMotherBoardId.includes(e)) {
-        return e;
-      }
-    });
+  var oldId = listPanelStorageId?.panelmotherBoard.map((e) => {
+    return e.id;
+  });
+  var dicon = oldId?.filter((e) => {
+    return !listMotherBoardId.includes(e);
+  });
 
   return await prisma.panelStorage.update({
     where: { id },
@@ -336,11 +363,9 @@ async function updateStorageService(
       storage: {
         update: {
           where: { id: storage.itemId },
-
           data: {
             price: Number(storage.price) as number,
             spec: storage.spec,
-
             color:
               img.length != 0
                 ? {
