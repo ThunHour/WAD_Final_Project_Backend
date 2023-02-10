@@ -119,6 +119,35 @@ async function getAllCaseServie() {
           },
         },
       },
+      panelmotherBoard: {
+        include: {
+          category: {
+            select: {
+              id: true,
+              categoryName: true,
+            },
+          },
+          motherBoard: {
+            select: {
+              id: true,
+              model: true,
+              price: true,
+              color: {
+                select: {
+                  id: true,
+                  color: true,
+                  image: {
+                    select: {
+                      id: true,
+                      imageUrl: true,
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
     },
   });
 }
@@ -146,6 +175,35 @@ async function getPanelCaseByIdService(id: string) {
                 select: {
                   id: true,
                   imageUrl: true,
+                },
+              },
+            },
+          },
+        },
+      },
+      panelmotherBoard: {
+        include: {
+          category: {
+            select: {
+              id: true,
+              categoryName: true,
+            },
+          },
+          motherBoard: {
+            select: {
+              id: true,
+              model: true,
+              price: true,
+              color: {
+                select: {
+                  id: true,
+                  color: true,
+                  image: {
+                    select: {
+                      id: true,
+                      imageUrl: true,
+                    },
+                  },
                 },
               },
             },
@@ -209,6 +267,35 @@ async function createCaseWithExistPanelService(
           },
         },
       },
+      panelmotherBoard: {
+        include: {
+          category: {
+            select: {
+              id: true,
+              categoryName: true,
+            },
+          },
+          motherBoard: {
+            select: {
+              id: true,
+              model: true,
+              price: true,
+              color: {
+                select: {
+                  id: true,
+                  color: true,
+                  image: {
+                    select: {
+                      id: true,
+                      imageUrl: true,
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
     },
   });
 }
@@ -236,6 +323,35 @@ async function getCaseByIdService(pid: string, itemId: string) {
                 select: {
                   id: true,
                   imageUrl: true,
+                },
+              },
+            },
+          },
+        },
+      },
+      panelmotherBoard: {
+        include: {
+          category: {
+            select: {
+              id: true,
+              categoryName: true,
+            },
+          },
+          motherBoard: {
+            select: {
+              id: true,
+              model: true,
+              price: true,
+              color: {
+                select: {
+                  id: true,
+                  color: true,
+                  image: {
+                    select: {
+                      id: true,
+                      imageUrl: true,
+                    },
+                  },
                 },
               },
             },
@@ -280,6 +396,35 @@ async function deleteCaseService(pid: string, itemId: string) {
             },
           },
         },
+        panelmotherBoard: {
+          include: {
+            category: {
+              select: {
+                id: true,
+                categoryName: true,
+              },
+            },
+            motherBoard: {
+              select: {
+                id: true,
+                model: true,
+                price: true,
+                color: {
+                  select: {
+                    id: true,
+                    color: true,
+                    image: {
+                      select: {
+                        id: true,
+                        imageUrl: true,
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
       },
     });
   }
@@ -308,15 +453,12 @@ async function updateCaseService(
       },
     },
   });
-  var dicon = listPanelCaseId?.panelmotherBoard
-    .map((e) => {
-      return e.id;
-    })
-    .map((e) => {
-      if (!listMotherBoardId.includes(e)) {
-        return e;
-      }
-    });
+  var oldId = listPanelCaseId?.panelmotherBoard.map((e) => {
+    return e.id;
+  });
+  var dicon = oldId?.filter((e) => {
+    return !listMotherBoardId.includes(e);
+  });
 
   return await prisma.panelCase.update({
     where: { id: pid },
@@ -324,7 +466,7 @@ async function updateCaseService(
       name: cases.model,
       case: {
         update: {
-          where: { id: cases.id },
+          where: { id: cases.itemId },
           data: {
             price: Number(cases.price) as number,
             color:

@@ -146,11 +146,10 @@ async function updateStorage(req: Request, res: Response, next: NextFunction) {
         : storageDto.listMotherBoardId == ""
         ? []
         : storageDto.listMotherBoardId.split(",");
+
     var updateStorage = await storageService.updateStorageService(
       id,
-
       storageDto,
-
       up as Image[],
       listOfMotherBoardId
     );
