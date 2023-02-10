@@ -3,6 +3,7 @@ import { respone } from "../../payload/respone/defaultRespone";
 import customizeService from "./customize.service";
 import { customizeRequest } from "../../payload/request/customize.Request";
 import jwtGen from "../../util/jwt-generate";
+import { userToken } from "../../payload/request/user";
 async function createCustomize(
   req: Request,
   res: Response,
@@ -11,7 +12,8 @@ async function createCustomize(
   try {
     const token = req.headers.authorization as string;
     var customizeDto = req.body as customizeRequest;
-    customizeDto.userId = jwtGen.getUserIdByToken(token);
+    const user = req.user as userToken;
+    customizeDto.userId = user.id;
     if (
       customizeDto.userId ||
       customizeDto.caseId == null ||
@@ -94,7 +96,8 @@ async function getAllCustomizeByUserId(
   try {
     const token = req.headers.authorization as string;
     var customizeDto = req.body as customizeRequest;
-    var id = jwtGen.getUserIdByToken(token);
+    const user = req.user as userToken;
+    const id = user.id;
     const customizes = await customizeService.getAllCustomizeByUserIdService(
       id
     );
@@ -132,7 +135,8 @@ async function copyCustomize(req: Request, res: Response, next: NextFunction) {
   try {
     const { cusId } = req.body;
     const token = req.headers.authorization as string;
-    var userId = jwtGen.getUserIdByToken(token);
+    const user = req.user as userToken;
+    var userId = user.id;
     if (cusId == null) {
       respone(res, null, "id must not null", 400);
       return;
@@ -174,7 +178,8 @@ async function updateCustomize(
     const { id } = req.params;
     const token = req.headers.authorization as string;
     var customizeDto = req.body as customizeRequest;
-    customizeDto.userId = jwtGen.getUserIdByToken(token);
+    const user = req.user as userToken;
+    customizeDto.userId = user.id;
     if (
       id == null ||
       customizeDto.userId ||
