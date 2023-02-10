@@ -11,11 +11,15 @@ async function createCustomize(
 ) {
   try {
     const token = req.headers.authorization as string;
+    console.log(req);
+
     var customizeDto = req.body as customizeRequest;
     const user = req.user as userToken;
-    customizeDto.userId = user.id;
+    // customizeDto.userId = user.id;
+    console.log(customizeDto);
+
     if (
-      customizeDto.userId ||
+      customizeDto.userId == null ||
       customizeDto.caseId == null ||
       customizeDto.cpuId == null ||
       customizeDto.gpuId == null ||
@@ -27,8 +31,9 @@ async function createCustomize(
       respone(res, null, "bad request", 400);
       return;
     }
-    var customize = await customizeService.createCustomizeService(customizeDto);
-    respone(res, customize, "Create customize successfully", 201);
+    // var customize = await customizeService.createCustomizeService(customizeDto);
+    // respone(res, customize, "Create customize successfully", 201);
+    respone(res, null, "Create customize successfully", 201);
   } catch (error) {
     respone(res, null, `${error}`, 500);
   }

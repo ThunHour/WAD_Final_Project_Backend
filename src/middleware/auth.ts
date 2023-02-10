@@ -8,6 +8,8 @@ export const authMiddleware = async (
 ) => {
   // get token from bearer header
   const authToken = req.header("Authorization");
+  console.log(req.body);
+
   if (!authToken) {
     return res.status(401).send({ error: "No token provided" });
   }

@@ -1,4 +1,4 @@
-import { Image, PanelMotherBoard, PrismaClient } from "@prisma/client";
+import { Image, PrismaClient } from "@prisma/client";
 import { motherBoardRequest } from "../../payload/request/motherBoard.Request";
 const prisma = new PrismaClient();
 

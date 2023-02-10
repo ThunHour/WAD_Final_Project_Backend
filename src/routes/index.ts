@@ -9,6 +9,7 @@ import cpu from "./cpu/index";
 import storage from "./storage/index";
 import gpu from "./gpu/index";
 import powerSupply from "./powerSupply/index";
+import customize from "./customize/index";
 import passport from "passport";
 import "../config/google/google.config";
 import "../config/facebook/facebook.config";
@@ -43,6 +44,7 @@ export default (app: Application) => {
   route.use("/storage", authMiddleware, storage());
   route.use("/gpu", authMiddleware, gpu());
   route.use("/powerSupply", authMiddleware, powerSupply());
+  route.use("/customize", authMiddleware, customize());
 
   route.get(
     "/google",
