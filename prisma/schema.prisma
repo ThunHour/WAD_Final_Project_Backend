@@ -243,13 +243,13 @@ model Customize {
   case          Case?        @relation(fields: [caseId], references: [id])
   motherBoard   MotherBoard? @relation(fields: [motherBoardId], references: [id])
   user          User?        @relation(fields: [userId], references: [id])
-  motherBoardId String?
+  motherBoardId String
   share         Boolean      @default(false)
-  gpuId         String?
-  powerSupplyId String?
-  cpuId         String?
-  ramId         String?
-  storageId     String?
-  caseId        String?
-  userId        String?
+  gpuId         String
+  powerSupplyId String
+  cpuId         String
+  ramId         String
+  storageId     String
+  caseId        String
+  userId        String
 }

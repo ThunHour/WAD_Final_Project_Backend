@@ -31,6 +31,8 @@ async function copyCustomizeService(cusId: string, userId: string) {
   }
 }
 async function createCustomizeService(custom: customizeRequest) {
+  console.log(custom);
+
   return await prisma.customize.create({
     data: {
       motherBoardId: custom.motherBoardId,
@@ -41,7 +43,6 @@ async function createCustomizeService(custom: customizeRequest) {
       storageId: custom.storageId,
       caseId: custom.caseId,
       userId: custom.userId,
-      share: false,
     },
     include: {
       case: {
