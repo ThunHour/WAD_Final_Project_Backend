@@ -331,6 +331,110 @@ async function getPanelMotherBoardByIdService(id: string) {
           },
         },
       },
+      panelcase: {
+        include: {
+          category: {
+            select: {
+              id: true,
+              categoryName: true,
+            },
+          },
+          case: {
+            include: {
+              color: {
+                select: {
+                  id: true,
+                  color: true,
+                  image: {
+                    select: {
+                      id: true,
+                      imageUrl: true,
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+      panelcpu: {
+        include: {
+          category: {
+            select: {
+              id: true,
+              categoryName: true,
+            },
+          },
+          cpu: {
+            include: {
+              color: {
+                select: {
+                  id: true,
+                  color: true,
+                  image: {
+                    select: {
+                      id: true,
+                      imageUrl: true,
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+      panelRam: {
+        include: {
+          category: {
+            select: {
+              id: true,
+              categoryName: true,
+            },
+          },
+          ram: {
+            include: {
+              color: {
+                select: {
+                  id: true,
+                  color: true,
+                  image: {
+                    select: {
+                      id: true,
+                      imageUrl: true,
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+      panelstorage: {
+        include: {
+          category: {
+            select: {
+              id: true,
+              categoryName: true,
+            },
+          },
+          storage: {
+            include: {
+              color: {
+                select: {
+                  id: true,
+                  color: true,
+                  image: {
+                    select: {
+                      id: true,
+                      imageUrl: true,
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
     },
   });
 }
