@@ -117,9 +117,7 @@ async function updateCpu(req: Request, res: Response, next: NextFunction) {
         : cpuDto.listMotherBoardId.split(",");
     var updateCpu = await cpuService.updateCpuService(
       id,
-      checkPanelCpu,
-      checkPanelCpu.cpu[0],
-      checkPanelCpu.cpu[0].color,
+      cpuDto,
       up as Image[],
       listOfMotherBoardId
     );

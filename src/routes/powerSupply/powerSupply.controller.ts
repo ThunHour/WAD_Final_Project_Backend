@@ -176,10 +176,11 @@ async function updatePowerSupply(
       image == undefined || image.length == 0
         ? []
         : await upload.uploadMulti(res, image, amount as number, "powerSupply");
+    console.log(powerSupplyDto);
+
     var updatePowerSupply = await powerSupplyService.updatePowerSupplyService(
       id,
       powerSupplyDto,
-
       up as Image[]
     );
     respone(res, updatePowerSupply, "update successful", 200);

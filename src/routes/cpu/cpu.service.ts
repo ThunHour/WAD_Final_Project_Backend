@@ -15,8 +15,8 @@ async function createCpuService(
         create: {
           type: cpuDto.type,
           spec: cpuDto.spec,
-
           price: Number(cpuDto.price),
+
           color: {
             create: {
               color: cpuDto.color,
@@ -320,9 +320,7 @@ async function deleteCpuService(pid: string, itemId: string) {
 
 async function updateCpuService(
   pid: string,
-  cpuDto: PanelCpu,
   cpu: any,
-  color: any,
   img: Image[],
   listMotherBoardId: string[]
 ) {
@@ -336,6 +334,13 @@ async function updateCpuService(
       },
     },
   });
+  if (img.length > 0) {
+    await prisma.color.delete({
+      where: {
+        cpuId: cpu.itemId,
+      },
+    });
+  }
   var dicon = listPanelCpuId?.panelmotherBoard
     .map((e) => {
       return e.id;
@@ -349,17 +354,17 @@ async function updateCpuService(
   return await prisma.panelCpu.update({
     where: { id: pid },
     data: {
-      name: cpuDto.name,
+      name: cpu.model,
       cpu: {
         update: {
           where: { id: cpu.id },
           data: {
             price: Number(cpu.price) as number,
             color:
-              img.length == 0
+              img.length != 0
                 ? {
-                    update: {
-                      color: color.color,
+                    create: {
+                      color: cpu.color,
                       image: {
                         createMany: {
                           data: img.map((c) => {
@@ -371,7 +376,7 @@ async function updateCpuService(
                   }
                 : {
                     update: {
-                      color: color.color,
+                      color: cpu.color,
                     },
                   },
           },

@@ -38,6 +38,7 @@ async function createPowerSupplyService(
           id: true,
           model: true,
           price: true,
+          spec: true,
           color: {
             select: {
               id: true,
@@ -71,6 +72,7 @@ async function getAllPowerSupplyServie() {
           id: true,
           model: true,
           price: true,
+          spec: true,
           color: {
             select: {
               id: true,
@@ -276,7 +278,7 @@ async function updatePowerSupplyService(
       name: powerSupply.model,
       powerSupply: {
         update: {
-          where: { id: powerSupply.id },
+          where: { id: powerSupply.itemId },
           data: {
             price: Number(powerSupply.price) as number,
             spec: powerSupply.spec,
@@ -335,13 +337,6 @@ async function updatePowerSupplyService(
 }
 
 async function deletePanelPowerSupplyService(id: string) {
-  const listPanelPowerSupplyId = await prisma.panelPowerSupply.findUnique({
-    where: { id },
-  });
-  await prisma.panelGpu.update({
-    where: { id },
-    data: {},
-  });
   return await prisma.panelPowerSupply.delete({
     where: { id: id },
   });

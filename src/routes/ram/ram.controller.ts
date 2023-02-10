@@ -117,9 +117,7 @@ async function updateRam(req: Request, res: Response, next: NextFunction) {
         : ramDto.listMotherBoardId.split(",");
     var updateRam = await ramService.updateRamService(
       id,
-      checkPanelRam,
-      checkPanelRam.ram[0],
-      checkPanelRam.ram[0].color,
+      ramDto,
       up as Image[],
       listOfMotherBoardId
     );

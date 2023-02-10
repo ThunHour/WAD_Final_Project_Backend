@@ -140,9 +140,7 @@ async function updateCase(req: Request, res: Response, next: NextFunction) {
         : caseDto.listMotherBoardId.split(",");
     var updateCase = await caseService.updateCaseService(
       id,
-      checkPanelCase,
-      checkPanelCase.case[0],
-      checkPanelCase.case[0].color,
+      caseDto,
       up as Image[],
       listOfMotherBoardId
     );

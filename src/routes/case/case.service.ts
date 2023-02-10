@@ -287,12 +287,17 @@ async function deleteCaseService(pid: string, itemId: string) {
 
 async function updateCaseService(
   pid: string,
-  caseDto: PanelCase,
   cases: any,
-  color: any,
   img: Image[],
   listMotherBoardId: string[]
 ) {
+  if (img.length > 0) {
+    await prisma.color.delete({
+      where: {
+        caseId: cases.itemId,
+      },
+    });
+  }
   const listPanelCaseId = await prisma.panelCase.findFirst({
     where: { id: pid },
     select: {
@@ -316,17 +321,17 @@ async function updateCaseService(
   return await prisma.panelCase.update({
     where: { id: pid },
     data: {
-      name: caseDto.name,
+      name: cases.model,
       case: {
         update: {
           where: { id: cases.id },
           data: {
             price: Number(cases.price) as number,
             color:
-              img.length == 0
+              img.length != 0
                 ? {
-                    update: {
-                      color: color.color,
+                    create: {
+                      color: cases.color,
                       image: {
                         createMany: {
                           data: img.map((c) => {
@@ -338,7 +343,7 @@ async function updateCaseService(
                   }
                 : {
                     update: {
-                      color: color.color,
+                      color: cases.color,
                     },
                   },
           },

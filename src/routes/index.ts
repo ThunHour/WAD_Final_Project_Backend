@@ -39,7 +39,8 @@ export default (app: Application) => {
   route.use("/ram", authMiddleware, ram());
   route.use("/motherBoard", authMiddleware, motherBoard());
   route.use("/cpu", authMiddleware, cpu());
-  route.use("/storage", authMiddleware, authorizeUser("ADMIN"), storage());
+  // authorizeUser("ADMIN")
+  route.use("/storage", authMiddleware, storage());
   route.use("/gpu", authMiddleware, gpu());
   route.use("/powerSupply", authMiddleware, powerSupply());
 
